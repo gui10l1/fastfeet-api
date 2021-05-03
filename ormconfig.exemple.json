@@ -1,10 +1,10 @@
 {
   "type": "postgres",
-  "host": "127.0.0.1",
-  "port": 5432,
-  "username": "postgres",
-  "password": "postgres_container",
-  "database": "fastfeet_db",
+  "host": "",
+  "port": "",
+  "username": "",
+  "password": "",
+  "database": "",
   "cli": {
     "migrationsDir": "./src/shared/infra/database/typeorm/migrations/"
   },
