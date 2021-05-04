@@ -72,7 +72,7 @@ Request property | Description | Required
 `cpf` | Define the user's CPF, it will be for authentication | :heavy_check_mark:
 `email` | Define user's email, it will be used for recovering password | :heavy_check_mark:
 `password` | Define user's password, it will be used for authentication | :heavy_check_mark:
-`deliveyMan` | Define if a user is a delivery man or not. It doesn't need to be provided if you are creating a delivery man user, but it's required when creating a admin user | :x:
+`deliveryMan` | Define if a user is a delivery man or not. It doesn't need to be provided if you are creating a delivery man user, but it's required when creating a admin user | :x:
 
 There are some information you should know:
 
@@ -123,7 +123,7 @@ Request property | Description | Required
 `email` | Define a new user's email | :x:
 `password` | Define a new user's password | :x:
 `oldPassword` | API will use this property to ensure that it's the owner who is doing the changes | :x:
-`deliveyMan` | Define if a user is a delivery man or not | :x:
+`deliveryMan` | Define if a user is a delivery man or not | :x:
 
 There are some information you should know:
 
