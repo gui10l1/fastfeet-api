@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'dotenv';
 
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
@@ -11,6 +12,9 @@ import AppError from '../../errors/AppError';
 
 // Database connection
 import '../database/typeorm/connection';
+
+// Containers
+import '../../containers';
 
 const app = express();
 
