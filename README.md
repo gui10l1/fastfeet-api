@@ -64,12 +64,12 @@ How to create, update, find, list, and delete users.
 Endpoint: `/users`.
 
 To create a new user you need to provide the data below in the request body
-(JSON).
+(`json`).
 
 Request property | Description | Required
 ---------------- | ----------- | --------
 `name` | Define user's name | :heavy_check_mark:
-`cpf` | Define teh user's CPF, it will be for authentication | :heavy_check_mark:
+`cpf` | Define the user's CPF, it will be for authentication | :heavy_check_mark:
 `email` | Define user's email, it will be used for recovering password | :heavy_check_mark:
 `password` | Define user's password, it will be used for authentication | :heavy_check_mark:
 `deliveyMan` | Define if a user is a delivery man or not. It doesn't need to be provided if you are creating a delivery man user, but it's required when creating a admin user | :x:
@@ -81,7 +81,7 @@ There are some information you should know:
 3. To create a admin user you need to provide a property called `deliveryMan` (boolean) and give it a false value;
 4. To create a delivey man you don't need to be authenticated, just provide your data and send the request.
 
-## Finding a specific user (GET)
+### Finding a specific user (GET)
 
 Endpoint: `/users/:id`.
 
@@ -97,7 +97,7 @@ There are some information you should know:
 1. If a user is not found, the API will throw an 404 error;
 2. If a user exists, it will bring the necessary information with it (not bringing sensitive data).
 
-## Listing users (GET)
+### Listing users (GET)
 
 Endpoint: `/users`.
 
@@ -107,3 +107,27 @@ API.
 Request property | Description | Required
 ---------------- | ----------- | --------
 N/A | N/A | N/A
+
+### Editing users (PUT)
+
+Endpoint: `/users`
+
+To update a user you don't need to provide all user information, it means that
+you just need to provide what you want to change. Request body needs to be in
+`json`.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`name` | Define a new user's name | :x:
+`cpf` | Define a new user's CPF | :x:
+`email` | Define a new user's email | :x:
+`password` | Define a new user's password | :x:
+`oldPassword` | API will use this property to ensure that it's the owner who is doing the changes | :x:
+`deliveyMan` | Define if a user is a delivery man or not | :x:
+
+There are some information you should know:
+
+1. You can't update a user that not exists;
+2. If you want to change user's password, you need to provide the old one;
+3. You can't update user's email to one that already is in use, but if the email matches with his old one nothing happens;
+4. You can't update user's CPF to one that already is in use.

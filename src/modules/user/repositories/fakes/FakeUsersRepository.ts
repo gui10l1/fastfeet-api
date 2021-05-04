@@ -56,7 +56,8 @@ export default class FakeUsersRepository implements IUsersReposiry {
     const userIndex = this.users.findIndex(findUser => findUser.id === user.id);
 
     const updatedUser = Object.assign(user, {
-      data,
+      ...data,
+      deliveryman: data.deliveryMan,
     });
 
     this.users[userIndex] = updatedUser;

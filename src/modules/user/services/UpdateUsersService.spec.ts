@@ -79,4 +79,114 @@ describe('UpdateUsers', () => {
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
+
+  it('should not be able to change the password if the old one is not provied', async () => {
+    const user = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+    });
+
+    await expect(
+      updateUsersService.execute({
+        userId: user.id,
+        data: {
+          name: 'John Tre',
+          password: '123123',
+        },
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to change the password if the old one does not match', async () => {
+    const user = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+    });
+
+    await expect(
+      updateUsersService.execute({
+        userId: user.id,
+        data: {
+          name: 'John Tre',
+          password: '123123',
+          oldPassword: 'wrong-old-password',
+        },
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should be able to hash the password', async () => {
+    const spyOnHashPassword = jest.spyOn(fakeHashProvider, 'hash');
+
+    const user = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+    });
+
+    await updateUsersService.execute({
+      userId: user.id,
+      data: {
+        name: 'John Tre',
+        password: '123123',
+        oldPassword: '123456',
+      },
+    });
+
+    expect(spyOnHashPassword).toHaveBeenCalledWith('123123');
+  });
+
+  it('should be able to change user password', async () => {
+    const user = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+    });
+
+    const userUpdated = await updateUsersService.execute({
+      userId: user.id,
+      data: {
+        name: 'John Tre',
+        password: '123123',
+        oldPassword: '123456',
+      },
+    });
+
+    const passwordMatch = await fakeHashProvider.compare(
+      '123123',
+      userUpdated.password,
+    );
+
+    expect(passwordMatch).toBeTruthy();
+  });
+
+  it('should be able to update a user', async () => {
+    const user = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+    });
+
+    const updatedUser = await updateUsersService.execute({
+      userId: user.id,
+      data: {
+        name: 'John Tre',
+        cpf: '11111111111',
+        email: 'johntre@exemple.com',
+        deliveryMan: false,
+      },
+    });
+
+    expect(updatedUser.name).toBe('John Tre');
+    expect(updatedUser.cpf).toBe('11111111111');
+    expect(updatedUser.email).toBe('johntre@exemple.com');
+    expect(updatedUser.deliveryman).toBeFalsy();
+  });
 });

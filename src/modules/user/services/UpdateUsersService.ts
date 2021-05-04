@@ -1,13 +1,14 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
-import { inject, injectable } from 'tsyringe';
-import IUsersRepositoryDTO from '../dtos/IUsersRepositoryDTO';
 
+import IUsersRepositoryDTO from '../dtos/IUsersRepositoryDTO';
 import User from '../infra/database/typeorm/entities/User';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IUserData extends Partial<IUsersRepositoryDTO> {
-  name: string;
+  oldPassword?: string;
 }
 
 interface IRequest {
@@ -32,7 +33,7 @@ export default class UpdateUsersService {
       throw new AppError('User not found!', 404);
     }
 
-    if (data.email) {
+    if (data.email && data.email !== userToUpdate.email) {
       const findUserByEmail = await this.usersRepository.findByEmail(
         data.email,
       );
@@ -43,11 +44,42 @@ export default class UpdateUsersService {
     }
 
     if (data.cpf) {
-      const findUserByEmail = await this.usersRepository.findByEmail(data.cpf);
+      const findUserByCpf = await this.usersRepository.findByCpf(data.cpf);
 
-      if (findUserByEmail) {
+      if (findUserByCpf) {
         throw new AppError('This CPF is already used!');
       }
+    }
+
+    if (data.password && !data.oldPassword) {
+      throw new AppError(
+        'To changeyour password you need to provider your old one',
+      );
+    }
+
+    if (data.oldPassword && data.password) {
+      const passwordMatch = await this.hashProvider.compare(
+        data.oldPassword,
+        userToUpdate.password,
+      );
+
+      if (!passwordMatch) {
+        throw new AppError("Old password doesn't match!");
+      }
+
+      const passwordHashed = await this.hashProvider.hash(data.password);
+
+      const parsedData = {
+        ...data,
+        password: passwordHashed,
+      };
+
+      const userUpdated = await this.usersRepository.edit(
+        userToUpdate,
+        parsedData,
+      );
+
+      return userUpdated;
     }
 
     const userUpdated = await this.usersRepository.edit(userToUpdate, data);
