@@ -12,7 +12,7 @@ interface IPayloadToken {
 
 export default function ensureAuthentication(
   req: Request,
-  _: Response,
+  res: Response,
   next: NextFunction,
 ): void {
   const headers = req.headers.authorization;
@@ -24,14 +24,14 @@ export default function ensureAuthentication(
   const [, token] = headers.split(' ');
 
   try {
-    const { sub } = verify(authConfig.secret, token) as IPayloadToken;
+    const { sub } = verify(token, authConfig.secret) as IPayloadToken;
 
     req.user = {
       id: sub,
     };
 
     next();
-  } catch {
+  } catch (err) {
     throw new AppError('Invalid authorization token!');
   }
 }

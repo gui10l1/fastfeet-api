@@ -2,10 +2,11 @@ import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import CreateUsersService from '@modules/user/services/CreateUsersService';
-import FindUsersService from '@modules/user/services/FindUsersService';
-import ListUsersService from '@modules/user/services/ListUsersService';
-import UpdateUsersService from '@modules/user/services/UpdateUsersService';
+import CreateUsersService from '@modules/user/services/users/CreateUsersService';
+import FindUsersService from '@modules/user/services/users/FindUsersService';
+import ListUsersService from '@modules/user/services/users/ListUsersService';
+import UpdateUsersService from '@modules/user/services/users/UpdateUsersService';
+import DeleteUsersService from '@modules/user/services/users/DeleteUsersService';
 
 export default class UsersController {
   public async index(req: Request, res: Response): Promise<Response> {
@@ -19,7 +20,7 @@ export default class UsersController {
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
-    const { name, cpf, email, password, adminId } = req.body;
+    const { name, cpf, email, password, adminId, deliveryMan } = req.body;
 
     const service = container.resolve(CreateUsersService);
 
@@ -30,6 +31,7 @@ export default class UsersController {
         cpf,
         email,
         password,
+        deliveryMan,
       },
     });
 
@@ -54,12 +56,14 @@ export default class UsersController {
 
   public async edit(req: Request, res: Response): Promise<Response> {
     const { name, cpf, email, password, oldPassword } = req.body;
-    const { id } = req.user;
+    const { id } = req.params;
+    const { id: userLogged } = req.user;
 
     const service = container.resolve(UpdateUsersService);
 
     const user = await service.execute({
-      userId: id,
+      userToBeUpdated: id,
+      userLogged,
       data: {
         name,
         cpf,
@@ -72,5 +76,19 @@ export default class UsersController {
     const response = classToClass(user);
 
     return res.json(response);
+  }
+
+  public async delete(req: Request, res: Response): Promise<Response> {
+    const { id: userLogged } = req.user;
+    const { id: userToDelete } = req.params;
+
+    const service = container.resolve(DeleteUsersService);
+
+    await service.execute({
+      userLogged,
+      userToDelete,
+    });
+
+    return res.status(204).send();
   }
 }

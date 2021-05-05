@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
 import FakeHashProvider from '@shared/providers/HashProvider/fakes/FakeHashProvider';
-import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
+import FakeUsersRepository from '../../repositories/fakes/FakeUsersRepository';
 import UpdateUsersService from './UpdateUsersService';
 
 let fakeUsersRepository: FakeUsersRepository;
@@ -18,9 +18,23 @@ describe('UpdateUsers', () => {
   });
 
   it('should not be able to update a non-exisiting user', async () => {
+    jest
+      .spyOn(fakeUsersRepository, 'findById')
+      .mockImplementationOnce(async () => {
+        return undefined;
+      });
+
+    const user = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+    });
+
     await expect(
       updateUsersService.execute({
-        userId: 'non-existing-user',
+        userToBeUpdated: user.id,
+        userLogged: user.id,
         data: {
           name: 'John Doe',
         },
@@ -45,7 +59,8 @@ describe('UpdateUsers', () => {
 
     await expect(
       updateUsersService.execute({
-        userId: user.id,
+        userToBeUpdated: user.id,
+        userLogged: user.id,
         data: {
           name: 'John Qua',
           email: 'johndoe@exemple.com',
@@ -71,7 +86,8 @@ describe('UpdateUsers', () => {
 
     await expect(
       updateUsersService.execute({
-        userId: user.id,
+        userToBeUpdated: user.id,
+        userLogged: user.id,
         data: {
           name: 'John Qua',
           cpf: '00000000000',
@@ -90,7 +106,8 @@ describe('UpdateUsers', () => {
 
     await expect(
       updateUsersService.execute({
-        userId: user.id,
+        userToBeUpdated: user.id,
+        userLogged: user.id,
         data: {
           name: 'John Tre',
           password: '123123',
@@ -109,11 +126,57 @@ describe('UpdateUsers', () => {
 
     await expect(
       updateUsersService.execute({
-        userId: user.id,
+        userToBeUpdated: user.id,
+        userLogged: user.id,
         data: {
           name: 'John Tre',
           password: '123123',
           oldPassword: 'wrong-old-password',
+        },
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to change a different user if who is logged is not a admin user', async () => {
+    const userLogged = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exmeple.com',
+      name: 'John Doe',
+      password: '123456',
+    });
+
+    const userToBeUpdated = await fakeUsersRepository.create({
+      cpf: '11111111111',
+      email: 'johntre@exmeple.com',
+      name: 'John Tre',
+      password: '123456',
+    });
+
+    await expect(
+      updateUsersService.execute({
+        userLogged: userLogged.id,
+        userToBeUpdated: userToBeUpdated.id,
+        data: {
+          name: 'John Qua',
+        },
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to change a different user if who is logged is not a non-existing admin user', async () => {
+    const userToBeUpdated = await fakeUsersRepository.create({
+      cpf: '11111111111',
+      email: 'johntre@exmeple.com',
+      name: 'John Tre',
+      password: '123456',
+    });
+
+    await expect(
+      updateUsersService.execute({
+        userLogged: 'non-existing-admin',
+        userToBeUpdated: userToBeUpdated.id,
+        data: {
+          name: 'John Qua',
         },
       }),
     ).rejects.toBeInstanceOf(AppError);
@@ -130,7 +193,8 @@ describe('UpdateUsers', () => {
     });
 
     await updateUsersService.execute({
-      userId: user.id,
+      userToBeUpdated: user.id,
+      userLogged: user.id,
       data: {
         name: 'John Tre',
         password: '123123',
@@ -150,7 +214,8 @@ describe('UpdateUsers', () => {
     });
 
     const userUpdated = await updateUsersService.execute({
-      userId: user.id,
+      userToBeUpdated: user.id,
+      userLogged: user.id,
       data: {
         name: 'John Tre',
         password: '123123',
@@ -175,7 +240,8 @@ describe('UpdateUsers', () => {
     });
 
     const updatedUser = await updateUsersService.execute({
-      userId: user.id,
+      userToBeUpdated: user.id,
+      userLogged: user.id,
       data: {
         name: 'John Tre',
         cpf: '11111111111',
@@ -188,5 +254,32 @@ describe('UpdateUsers', () => {
     expect(updatedUser.cpf).toBe('11111111111');
     expect(updatedUser.email).toBe('johntre@exemple.com');
     expect(updatedUser.deliveryman).toBeFalsy();
+  });
+
+  it('should be able to admin user change another users', async () => {
+    const userLogged = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+      deliveryMan: false,
+    });
+
+    const userToBeUpdated = await fakeUsersRepository.create({
+      cpf: '11111111111',
+      email: 'johntre@exmeple.com',
+      name: 'John Tre',
+      password: '123456',
+    });
+
+    const userUpdated = await updateUsersService.execute({
+      userLogged: userLogged.id,
+      userToBeUpdated: userToBeUpdated.id,
+      data: {
+        name: 'John Qua',
+      },
+    });
+
+    expect(userUpdated.name).toBe('John Qua');
   });
 });

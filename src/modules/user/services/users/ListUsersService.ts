@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import User from '../infra/database/typeorm/entities/User';
-import IUsersRepository from '../repositories/IUsersRepository';
+import User from '../../infra/database/typeorm/entities/User';
+import IUsersRepository from '../../repositories/IUsersRepository';
 
 @injectable()
 export default class ListUsersService {

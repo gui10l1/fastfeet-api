@@ -1,5 +1,6 @@
 export default class AppError {
   public readonly httpCode: number;
+
   public readonly message: string;
 
   constructor(message: string, httpCode = 400) {

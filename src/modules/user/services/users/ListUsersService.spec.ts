@@ -1,4 +1,4 @@
-import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
+import FakeUsersRepository from '../../repositories/fakes/FakeUsersRepository';
 import ListUsersService from './ListUsersService';
 
 let fakeUsersRepository: FakeUsersRepository;

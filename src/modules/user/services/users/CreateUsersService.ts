@@ -3,9 +3,9 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 
-import IUsersRepositoryDTO from '../dtos/IUsersRepositoryDTO';
-import User from '../infra/database/typeorm/entities/User';
-import IUsersRepository from '../repositories/IUsersRepository';
+import IUsersRepositoryDTO from '../../dtos/IUsersRepositoryDTO';
+import User from '../../infra/database/typeorm/entities/User';
+import IUsersRepository from '../../repositories/IUsersRepository';
 
 interface IRequest {
   adminId?: string;
@@ -31,7 +31,7 @@ export default class CreateUsersService {
       const findAdmin = await this.usersRepository.findById(adminId);
 
       if (!findAdmin) {
-        throw new AppError('You do not have permission for this action!', 403);
+        throw new AppError('Admin not found!', 404);
       }
 
       if (findAdmin.deliveryman === true) {

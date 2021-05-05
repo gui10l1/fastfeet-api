@@ -13,7 +13,10 @@ export default class UsersRepository implements IUsersRepository {
   }
 
   public async create(data: IUsersRepositoryDTO): Promise<User> {
-    const user = this.ormRepository.create(data);
+    const user = this.ormRepository.create({
+      ...data,
+      deliveryman: data.deliveryMan,
+    });
 
     await this.ormRepository.save(user);
 
@@ -51,5 +54,9 @@ export default class UsersRepository implements IUsersRepository {
 
   public async list(): Promise<User[]> {
     return this.ormRepository.find();
+  }
+
+  public async delete(user: User): Promise<void> {
+    await this.ormRepository.remove(user);
   }
 }

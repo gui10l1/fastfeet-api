@@ -8,4 +8,5 @@ export default interface IUsersRepository {
   findById(userId: string): Promise<User | undefined>;
   edit(user: User, data: Partial<IUsersRepositoryDTO>): Promise<User>;
   list(): Promise<User[]>;
+  delete(user: User): Promise<void>;
 }

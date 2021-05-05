@@ -3,16 +3,17 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 
-import IUsersRepositoryDTO from '../dtos/IUsersRepositoryDTO';
-import User from '../infra/database/typeorm/entities/User';
-import IUsersRepository from '../repositories/IUsersRepository';
+import IUsersRepositoryDTO from '../../dtos/IUsersRepositoryDTO';
+import User from '../../infra/database/typeorm/entities/User';
+import IUsersRepository from '../../repositories/IUsersRepository';
 
 interface IUserData extends Partial<IUsersRepositoryDTO> {
   oldPassword?: string;
 }
 
 interface IRequest {
-  userId: string;
+  userToBeUpdated: string;
+  userLogged: string;
   data: IUserData;
 }
 
@@ -26,8 +27,24 @@ export default class UpdateUsersService {
     private hashProvider: IHashProvider,
   ) {}
 
-  public async execute({ userId, data }: IRequest): Promise<User> {
-    const userToUpdate = await this.usersRepository.findById(userId);
+  public async execute({
+    userToBeUpdated,
+    userLogged,
+    data,
+  }: IRequest): Promise<User> {
+    if (userToBeUpdated !== userLogged) {
+      const adminUser = await this.usersRepository.findById(userLogged);
+
+      if (!adminUser) {
+        throw new AppError('This admin was not found!', 404);
+      }
+
+      if (adminUser.deliveryman) {
+        throw new AppError('You do not permission to do this action!', 403);
+      }
+    }
+
+    const userToUpdate = await this.usersRepository.findById(userToBeUpdated);
 
     if (!userToUpdate) {
       throw new AppError('User not found!', 404);
