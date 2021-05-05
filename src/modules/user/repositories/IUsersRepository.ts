@@ -6,7 +6,7 @@ export default interface IUsersRepository {
   findByCpf(cpf: string): Promise<User | undefined>;
   findByEmail(email: string): Promise<User | undefined>;
   findById(userId: string): Promise<User | undefined>;
-  edit(user: User, data: Partial<IUsersRepositoryDTO>): Promise<User>;
+  update(user: User, data: Partial<IUsersRepositoryDTO>): Promise<User>;
   list(): Promise<User[]>;
   delete(user: User): Promise<void>;
 }

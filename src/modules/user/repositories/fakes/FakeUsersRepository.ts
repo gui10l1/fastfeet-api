@@ -49,7 +49,7 @@ export default class FakeUsersRepository implements IUsersReposiry {
     return this.users.find(user => user.id === userId);
   }
 
-  public async edit(
+  public async update(
     user: User,
     data: Partial<IUsersRepositoryDTO>,
   ): Promise<User> {

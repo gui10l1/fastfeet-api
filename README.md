@@ -57,7 +57,9 @@ This session is to explain how to deal with each API's module (users).
 
 ## Users
 
-How to create, update, find, list, and delete users.
+How to create, update, find, list, and delete users. Users can be admin users
+and delivery men. If you want to create a user as a client go to Client module
+session.
 
 ### Creating a new user (POST)
 
@@ -70,7 +72,7 @@ Request property | Description | Required
 ---------------- | ----------- | --------
 `name` | Define user's name | :heavy_check_mark:
 `cpf` | Define the user's CPF, it will be for authentication | :heavy_check_mark:
-`email` | Define user's email, it will be used for recovering password | :heavy_check_mark:
+`email` | Define user's email, it will be used for recovering password and account verification | :heavy_check_mark:
 `password` | Define user's password, it will be used for authentication | :heavy_check_mark:
 `deliveryMan` | Define if a user is a delivery man or not. It doesn't need to be provided if you are creating a delivery man user, but it's required when creating a admin user | :x:
 `adminId` | It will be used to check if you have permissions to create a new admin user. The property `deliveryMan` and `adminId` are used together, if you provide one of them, then you need to provide the other one | :x:
@@ -167,3 +169,24 @@ There are some information you should know:
 
 1. This API uses JWT for authentication, so if the authentication succeed, this endpoint will return the JWT token, and the user who did auth;
 2. JWT token payload has the user id inside it's encryption.
+
+## Client
+
+How to create clients. Clients are users who can buy and order stuff inside the
+application.
+
+### Creating clients (POST)
+
+Endpoint: `/clients`.
+
+To create a new client you need to provide information below inside the request
+body which needs to be in `json`.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`name` | Define client's name | :heavy_check_mark:
+`email` | Define client's email. It will be used for authentication, password recovery, and account verification | :heavy_check_mark:
+`password` | Define client's password. It will be used for authentication | :heavy_check_mark:
+`postalCode` | Define client's postal code. It is not necessary to provide, it means that the client can set it later at the account settings | :x:
+
+There is no rules for clients, anybody can create them.

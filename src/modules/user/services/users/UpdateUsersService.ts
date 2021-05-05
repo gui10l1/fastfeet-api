@@ -91,7 +91,7 @@ export default class UpdateUsersService {
         password: passwordHashed,
       };
 
-      const userUpdated = await this.usersRepository.edit(
+      const userUpdated = await this.usersRepository.update(
         userToUpdate,
         parsedData,
       );
@@ -99,7 +99,7 @@ export default class UpdateUsersService {
       return userUpdated;
     }
 
-    const userUpdated = await this.usersRepository.edit(userToUpdate, data);
+    const userUpdated = await this.usersRepository.update(userToUpdate, data);
 
     return userUpdated;
   }

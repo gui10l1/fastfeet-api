@@ -41,7 +41,7 @@ export default class UsersRepository implements IUsersRepository {
     });
   }
 
-  public async edit(
+  public async update(
     user: User,
     data: Partial<IUsersRepositoryDTO>,
   ): Promise<User> {
