@@ -1,8 +1,10 @@
 import { inject, injectable } from 'tsyringe';
+import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 
+import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 import IUsersRepositoryDTO from '../../dtos/IUsersRepositoryDTO';
 import User from '../../infra/database/typeorm/entities/User';
 import IUsersRepository from '../../repositories/IUsersRepository';
@@ -25,6 +27,9 @@ export default class UpdateUsersService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) {}
 
   public async execute({
@@ -58,6 +63,30 @@ export default class UpdateUsersService {
       if (findUserByEmail) {
         throw new AppError('This email is already used!');
       }
+
+      const templateFile = path.resolve(
+        __dirname,
+        '..',
+        '..',
+        'views',
+        'mails',
+        'confirm-updated-email-address.hbs',
+      );
+
+      await this.mailProvider.sendMail({
+        subject: 'Your email has been updated. Confirm it',
+        to: {
+          emailAddress: data.email,
+          name: data.name || userToUpdate.name,
+        },
+        template: {
+          templateFile,
+          variables: {
+            name: data.name || userToUpdate.name,
+            newEmail: data.email,
+          },
+        },
+      });
     }
 
     if (data.cpf) {

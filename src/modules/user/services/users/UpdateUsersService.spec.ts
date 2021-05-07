@@ -1,19 +1,23 @@
 import AppError from '@shared/errors/AppError';
 import FakeHashProvider from '@shared/providers/HashProvider/fakes/FakeHashProvider';
+import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
 import FakeUsersRepository from '../../repositories/fakes/FakeUsersRepository';
 import UpdateUsersService from './UpdateUsersService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let updateUsersService: UpdateUsersService;
+let fakeMailProvider: FakeMailProvider;
 
 describe('UpdateUsers', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
+    fakeMailProvider = new FakeMailProvider();
     updateUsersService = new UpdateUsersService(
       fakeUsersRepository,
       fakeHashProvider,
+      fakeMailProvider,
     );
   });
 
@@ -281,5 +285,27 @@ describe('UpdateUsers', () => {
     });
 
     expect(userUpdated.name).toBe('John Qua');
+  });
+
+  it('should be able to send a email to confirm his (user) updated email', async () => {
+    const spyOnMailMethod = jest.spyOn(fakeMailProvider, 'sendMail');
+
+    const userLogged = await fakeUsersRepository.create({
+      cpf: '00000000000',
+      email: 'johndoe@exemple.com',
+      name: 'John Doe',
+      password: '123456',
+      deliveryMan: false,
+    });
+
+    await updateUsersService.execute({
+      userLogged: userLogged.id,
+      userToBeUpdated: userLogged.id,
+      data: {
+        email: 'johntre@exemple.com',
+      },
+    });
+
+    expect(spyOnMailMethod).toHaveBeenCalled();
   });
 });

@@ -1,19 +1,23 @@
 import AppError from '@shared/errors/AppError';
 import FakeHashProvider from '@shared/providers/HashProvider/fakes/FakeHashProvider';
+import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
 import FakeUsersRepository from '../../repositories/fakes/FakeUsersRepository';
 import CreateUsersService from './CreateUsersService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUsersService: CreateUsersService;
+let fakeMailProvider: FakeMailProvider;
 
 describe('CreateUsers', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
+    fakeMailProvider = new FakeMailProvider();
     createUsersService = new CreateUsersService(
       fakeUsersRepository,
       fakeHashProvider,
+      fakeMailProvider,
     );
   });
 
@@ -158,5 +162,20 @@ describe('CreateUsers', () => {
     });
 
     expect(user.deliveryman).toBeTruthy();
+  });
+
+  it('should be able to send a confirmation email to the recent created user', async () => {
+    const spyOnMailMethod = jest.spyOn(fakeMailProvider, 'sendMail');
+
+    await createUsersService.execute({
+      data: {
+        cpf: '00000000000',
+        email: 'johndoe@exemple.com',
+        name: 'John Doe',
+        password: '123456',
+      },
+    });
+
+    expect(spyOnMailMethod).toHaveBeenCalled();
   });
 });

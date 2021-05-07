@@ -35,6 +35,14 @@ initialize all of them before using the API.
 This variable is used in some funcionalities, and needs to have a value. The
 value for it can be anything you want.
 
+* MAIL_PROVIDER
+
+FastFeet API uses different mail providers and it's defined by one environment
+variable that is **MAIL_PROVIDER**. By now, there are only one option to
+provide: sandbox. If you provide any other different value, FastFeet API will
+throw an **error** when you try to use a service with this provider
+implementation.
+
 # API information
 
 This API uses **Node.js** with **Typescript** and **ESLint** patterns from
@@ -113,11 +121,11 @@ N/A | N/A | N/A
 
 ### Editing users (PUT)
 
-Endpoint: `/users`
+Endpoint: `/users/:id`
 
 To update a user you don't need to provide all user information, it means that
-you just need to provide what you want to change. Request body needs to be in
-`json`.
+you just need to provide what you want to change, but you need to provide his
+id at the request params. Request body needs to be in `json`.
 
 Request property | Description | Required
 ---------------- | ----------- | --------
@@ -153,9 +161,11 @@ There are some information you should know:
 3. If you are trying to delete a user that doesn't exist in database API will return a 404 error;
 4. This endpoint return, if succeed, a 204 http status response.
 
-### Creating sessions (POST)
+### Creating sessions for USERS (POST)
 
-Endpoint: `/sessions`
+*If you are looking for clients authentication, go to this [section](#creating-sessions-for-clients-post).*
+
+Endpoint: `/sessions/user`
 
 To create a session you need to provide user's CPF and password inside the
 request body, and it needs to be in `json`.
@@ -190,3 +200,43 @@ Request property | Description | Required
 `postalCode` | Define client's postal code. It is not necessary to provide, it means that the client can set it later at the account settings | :x:
 
 There is no rules for clients, anybody can create them.
+
+### Editing clients (PUT)
+
+Endpoint: `/clients`
+
+To update a client you don't need to provide all his information, it means that
+you just need to provide what you want to change. Request body needs to be in
+`json`. This route requires authentication for clients.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`name` | Define new client's name | :x:
+`email` | Define new client's email. | :x:
+`password` | Define new client's password. It will be used for authentication | :x:
+`postalCode` | Define new client's postal code. It is not necessary to provide, it means that the client can set it later at the account settings | :x:
+
+There are some information you should know:
+
+1. You can't update a client that not exists, if tried, API will throw an 404 error;
+2. To update password, clients need to provide their old password;
+3. Clients cannot update email to one that already is in use, but if their email matches with their old ones nothing happens. If they change their email, a confirmation will be sent to their new email address;
+
+### Creating sessions for CLIENTS (POST)
+
+*If you are looking for users (admin, delivery men) authentication, go to this [section](#creating-sessions-for-users-post).*
+
+Endpoint: `/sessions/client`.
+
+To create a session for a client you need to provide all information below
+inside the request body which needs to be in `json`.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`email` | API will check if the client exists inside the database by this parameter | :heavy_check_mark:
+`password` | API will check if it is the own client who is making the request | :heavy_check_mark:
+
+There are some information you should know:
+
+1. This API uses JWT for authentication, so if the authentication succeed, this endpoint will return the JWT token, and the client who did auth;
+2. JWT token payload has the user id inside it's encryption.

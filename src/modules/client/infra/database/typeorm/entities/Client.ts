@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -18,14 +19,15 @@ export default class Client {
   email: string;
 
   @Column('varchar', { length: 255 })
+  @Exclude()
   password: string;
 
   @Column('varchar', { length: 255 })
   postal_code: string;
 
-  @CreateDateColumn('timestamp with time zone')
+  @CreateDateColumn()
   created_at: Date;
 
-  @UpdateDateColumn('timestamp with time zone')
+  @UpdateDateColumn()
   updated_at: Date;
 }

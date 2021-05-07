@@ -1,7 +1,9 @@
 import { inject, injectable } from 'tsyringe';
+import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
+import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 
 import IUsersRepositoryDTO from '../../dtos/IUsersRepositoryDTO';
 import User from '../../infra/database/typeorm/entities/User';
@@ -20,6 +22,9 @@ export default class CreateUsersService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) {}
 
   public async execute({ adminId, data }: IRequest): Promise<User> {
@@ -56,6 +61,29 @@ export default class CreateUsersService {
     const user = await this.usersRepository.create({
       ...data,
       password: hashedPassword,
+    });
+
+    const mailTemplate = path.resolve(
+      __dirname,
+      '..',
+      '..',
+      'views',
+      'mails',
+      'confirm-new-account.hbs',
+    );
+
+    await this.mailProvider.sendMail({
+      subject: 'Account confirmation',
+      to: {
+        emailAddress: user.email,
+        name: user.name,
+      },
+      template: {
+        templateFile: mailTemplate,
+        variables: {
+          name: user.name,
+        },
+      },
     });
 
     return user;

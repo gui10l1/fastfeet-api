@@ -7,10 +7,10 @@ const sessionRoutes = Router();
 const sessionsController = new SessionsController();
 
 sessionRoutes.post(
-  '/user',
+  '/client',
   celebrate({
     [Segments.BODY]: {
-      cpf: Joi.string().required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
     },
   }),
