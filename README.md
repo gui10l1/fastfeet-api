@@ -240,3 +240,94 @@ There are some information you should know:
 
 1. This API uses JWT for authentication, so if the authentication succeed, this endpoint will return the JWT token, and the client who did auth;
 2. JWT token payload has the user id inside it's encryption.
+
+## Deliveries
+
+There is a lot of functionalities for deliveries. It's inside this module where
+most of business rules of this API are in. This module is divided in two:
+*deliveries* itself, and *delivery men*.
+
+### Deliveries
+
+Here you will find out how to create a new delivery.
+
+#### Creating a new delivery (POST)
+
+Endpoint: `/deliveries`.
+
+This route creates a new delivery, it requires authentication for clients,
+and you need to provide all information below inside the request body which
+needs to be in... `json` =D.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`recipientId` | This will define who requested the delivery (client) | :heavy_check_mark:
+`postalCode` | Define client's postal code | :heavy_check_mark:
+`product` | Define the product | :heavy_check_mark:
+`address` | Client's address | :heavy_check_mark:
+`neighborhood` | Client's neighborhood | :heavy_check_mark:
+`city` | Client's city | :heavy_check_mark:
+`state` | Client's state | :heavy_check_mark:
+
+There are some information you should know:
+
+1. You cannot create a delivery from a non-existing client;
+2. When the delivery is request successfully will be sent a email to the client's mail box alerting him about it;
+3. Only **clients** can request deliveries.
+
+### Delivery men
+
+Here you will find out how to list finished deliveries, accept delivery to
+withdraw and then deliver. Let's get started.
+
+#### Listing finished deliveries (GET)
+
+Endpoint: `/deliveries/delivery-man/finished`.
+
+This route will bring all deliveries that has been delivered by one specific
+delivery man. This is a GET route and you need to provide no data, but you need
+to be authenticated to access it.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+N/A | N/A | N/A
+
+There are some information you should know:
+
+1. You need to be authenticated as a delivery man to see your finished deliveries;
+2. Admin cannot access this route since they are not delivery men;
+3. If you try to access finished deliveries from a non-existing delivery man, the API will throw an 400 http error.
+
+#### Accepting deliveries to deliver (PATCH)
+
+Endpoint: `/deliveries/:deliveryId/delivery-man/accept`.
+
+Here you will be able to accept a delivery to a delivery man, after the
+accepting, he will be able to withdraw this delivery and then deliver it. This
+route requires authentication for delivery men, and requires route params
+indicating the delivery's id that he (delivery man) is accepting.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`deliveryId` | The delivery id, it goes inside the route params and will be used by the API for multiple checks | :heavy_check_mark:
+
+There are some information you should know:
+
+1. The return from this route is void.
+
+#### Withdrawing a delivery (PATCH)
+
+Endpoint: `/deliveries/:deliveryId/delivery-man/withdraw`.
+
+After accepting a delivery, delivery man will have an option to withdraw this
+delivery and deliver it to the recipient. This route requires athentication for
+delivery men, and requires route params indicating the delivery's id that he
+(delivery man) is withdrawing.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`deliveryId` | The delivery id, it goes inside the route params and will be used by the API for multiple checks | :heavy_check_mark:
+
+There are some information you should know:
+
+1. The return from this route is void.

@@ -157,11 +157,11 @@ describe('CreateUsers', () => {
         email: 'johntre@exemple.com',
         name: 'John Tre',
         password: '123456',
-        deliveryMan: true,
+        deliveryMan: false,
       },
     });
 
-    expect(user.deliveryman).toBeTruthy();
+    expect(user.deliveryman).toBeFalsy();
   });
 
   it('should be able to send a confirmation email to the recent created user', async () => {

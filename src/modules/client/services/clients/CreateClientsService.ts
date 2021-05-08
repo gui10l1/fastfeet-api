@@ -59,7 +59,7 @@ export default class CreateClientsService {
       template: {
         templateFile,
         variables: {
-          name: client.name,
+          clientName: client.name,
         },
       },
     });

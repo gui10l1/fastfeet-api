@@ -82,8 +82,7 @@ export default class UpdateUsersService {
         template: {
           templateFile,
           variables: {
-            name: data.name || userToUpdate.name,
-            newEmail: data.email,
+            userName: data.name || userToUpdate.name,
           },
         },
       });
@@ -99,7 +98,7 @@ export default class UpdateUsersService {
 
     if (data.password && !data.oldPassword) {
       throw new AppError(
-        'To changeyour password you need to provider your old one',
+        'To change your password you need to provider your old one',
       );
     }
 

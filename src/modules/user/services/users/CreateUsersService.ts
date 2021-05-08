@@ -81,7 +81,8 @@ export default class CreateUsersService {
       template: {
         templateFile: mailTemplate,
         variables: {
-          name: user.name,
+          userName: user.name,
+          accountType: user.deliveryman === false ? 'admin' : 'delivery man',
         },
       },
     });
