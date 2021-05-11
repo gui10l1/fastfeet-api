@@ -3,6 +3,7 @@ import nodemailer, { Transporter } from 'nodemailer';
 
 import IMailTemplateProvider from '@shared/providers/MailTemplateProvider/models/IMailTemplateProvider';
 
+import mailConfig from '@config/mailConfig';
 import IMailProviderDTO from '../dtos/IMailProviderDTO';
 import IMailProvider from '../models/IMailProvider';
 
@@ -35,8 +36,8 @@ export default class SandBoxMailProvider implements IMailProvider {
   }: IMailProviderDTO): Promise<void> {
     const message = await this.mailTransporter.sendMail({
       from: {
-        name: from?.name || 'Equipe FastFeet',
-        address: from?.emailAddress || 'fastfeet@suport.com.br',
+        name: from?.name || mailConfig.from.name,
+        address: from?.emailAddress || mailConfig.from.emailAddress,
       },
       to: {
         address: to.emailAddress,

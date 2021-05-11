@@ -1,6 +1,6 @@
 import IDeliveriesRepositoryDTO from '@modules/delivery/dtos/IDeliveriesRepositoryDTO';
 import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, IsNull, Not, Repository } from 'typeorm';
 import Delivery from '../entities/Delivery';
 
 export default class DeliveriesRepository implements IDeliveriesRepository {
@@ -87,7 +87,7 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
     return this.ormRepository.find({
       where: {
         deliveryman_id: deliveryManId,
-        end_date: Date,
+        end_date: Not(IsNull()),
       },
     });
   }

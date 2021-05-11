@@ -32,9 +32,9 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
   ): Promise<Delivery[]> {
     return this.deliveries.filter(
       delivery =>
-        delivery.created_at === null &&
-        delivery.end_date === null &&
-        delivery.deliveryman_id === deliveryManId,
+        !delivery.end_date &&
+        delivery.deliveryman_id === deliveryManId &&
+        !delivery.canceled_at,
     );
   }
 
@@ -84,6 +84,7 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
   public async finishDelivery(
     delivery: Delivery,
     finishDate: Date,
+    signatureId: string,
   ): Promise<Delivery> {
     const findDeliveryIndex = this.deliveries.findIndex(
       item => item.id === delivery.id,
@@ -91,6 +92,7 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
 
     Object.assign(delivery, {
       end_date: finishDate,
+      signature_id: signatureId,
     });
 
     this.deliveries[findDeliveryIndex] = delivery;

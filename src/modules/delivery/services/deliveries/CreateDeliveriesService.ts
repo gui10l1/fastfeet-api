@@ -34,6 +34,7 @@ export default class CreateDeliveriesService {
     const templateFile = path.resolve(
       __dirname,
       '..',
+      '..',
       'views',
       'mails',
       'delivery-requested.hbs',
