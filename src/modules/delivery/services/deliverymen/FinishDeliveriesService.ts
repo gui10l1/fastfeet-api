@@ -64,6 +64,10 @@ export default class FinishDeliveriesService {
       throw new AppError('The client for this delivery was not found!', 404);
     }
 
+    if (findDelivery.end_date) {
+      throw new AppError('This delivery has already been finished!', 403);
+    }
+
     const dateToday = Date.now();
 
     await this.deliveriesRepository.finishDelivery(

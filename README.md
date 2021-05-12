@@ -63,13 +63,13 @@ all the tests.
 
 This session is to explain how to deal with each API's module (users).
 
-## Users
+# Users
 
 How to create, update, find, list, and delete users. Users can be admin users
 and delivery men. If you want to create a user as a client go to Client module
 session.
 
-### Creating a new user (POST)
+## Creating a new user (POST)
 
 Endpoint: `/users`.
 
@@ -92,7 +92,7 @@ There are some information you should know:
 3. To create a admin user you need to provide a property called `deliveryMan` (boolean) and give it a false value;
 4. To create a delivey man you can just provide your data and send the request.
 
-### Finding a specific user (GET)
+## Finding a specific user (GET)
 
 Endpoint: `/users/:id`.
 
@@ -108,7 +108,7 @@ There are some information you should know:
 1. If a user is not found, the API will throw an 404 error;
 2. If a user exists, it will bring the necessary information with it (not bringing sensitive data).
 
-### Listing users (GET)
+## Listing users (GET)
 
 Endpoint: `/users`.
 
@@ -119,7 +119,7 @@ Request property | Description | Required
 ---------------- | ----------- | --------
 N/A | N/A | N/A
 
-### Editing users (PUT)
+## Editing users (PUT)
 
 Endpoint: `/users/:id`
 
@@ -143,7 +143,7 @@ There are some information you should know:
 3. You can't update user's email to one that already is in use, but if the email matches with his old one nothing happens;
 4. You can't update user's CPF to one that already is in use.
 
-### Deleting users (DELETE)
+## Deleting users (DELETE)
 
 Endpoint: `/users/:id`
 
@@ -161,7 +161,7 @@ There are some information you should know:
 3. If you are trying to delete a user that doesn't exist in database API will return a 404 error;
 4. This endpoint return, if succeed, a 204 http status response.
 
-### Creating sessions for USERS (POST)
+## Creating sessions for USERS (POST)
 
 *If you are looking for clients authentication, go to this [section](#creating-sessions-for-clients-post).*
 
@@ -180,12 +180,12 @@ There are some information you should know:
 1. This API uses JWT for authentication, so if the authentication succeed, this endpoint will return the JWT token, and the user who did auth;
 2. JWT token payload has the user id inside it's encryption.
 
-## Client
+# Client
 
 How to create clients. Clients are users who can buy and order stuff inside the
 application.
 
-### Creating clients (POST)
+## Creating clients (POST)
 
 Endpoint: `/clients`.
 
@@ -201,7 +201,7 @@ Request property | Description | Required
 
 There is no rules for clients, anybody can create them.
 
-### Editing clients (PUT)
+## Editing clients (PUT)
 
 Endpoint: `/clients`
 
@@ -222,7 +222,7 @@ There are some information you should know:
 2. To update password, clients need to provide their old password;
 3. Clients cannot update email to one that already is in use, but if their email matches with their old ones nothing happens. If they change their email, a confirmation will be sent to their new email address;
 
-### Creating sessions for CLIENTS (POST)
+## Creating sessions for CLIENTS (POST)
 
 *If you are looking for users (admin, delivery men) authentication, go to this [section](#creating-sessions-for-users-post).*
 
@@ -241,17 +241,17 @@ There are some information you should know:
 1. This API uses JWT for authentication, so if the authentication succeed, this endpoint will return the JWT token, and the client who did auth;
 2. JWT token payload has the user id inside it's encryption.
 
-## Deliveries
+# Deliveries
 
 There is a lot of functionalities for deliveries. It's inside this module where
 most of business rules of this API are in. This module is divided in two:
 *deliveries* itself, and *delivery men*.
 
-### Deliveries
+## Deliveries
 
 Here you will find out how to create a new delivery.
 
-#### Creating a new delivery (POST)
+### Creating a new delivery (POST)
 
 Endpoint: `/deliveries`.
 
@@ -275,14 +275,29 @@ There are some information you should know:
 2. When the delivery is request successfully will be sent a email to the client's mail box alerting him about it;
 3. Only **clients** can request deliveries.
 
-### Delivery men
+### Canceling deliveries (PATCH)
+
+Endpoint: `/deliveries/cancel/:deliveryId`.
+
+This route ables to the client to cancel a delivery. This endpoint requires
+authentication and the delivery id to cancel.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`deliveryId` | API will use this id for multiple checks | :heavy_check_mark:
+
+1. This route returns void;
+2. It's not able to cancel a delivery that has not been requested by you;
+3. It's not able to cancel a delivery that does not exist.
+
+## Delivery men
 
 Here you will find out how to list finished deliveries, accept delivery to
 withdraw and then deliver. Let's get started.
 
-#### Listing finished deliveries (GET)
+### Listing finished deliveries (GET)
 
-Endpoint: `/deliveries/delivery-man/finished`.
+Endpoint: `/delivery-men/me/finished-deliveries`.
 
 This route will bring all deliveries that has been delivered by one specific
 delivery man. This is a GET route and you need to provide no data, but you need
@@ -298,9 +313,9 @@ There are some information you should know:
 2. Admin cannot access this route since they are not delivery men;
 3. If you try to access finished deliveries from a non-existing delivery man, the API will throw an 400 http error.
 
-#### Accepting deliveries to deliver (PATCH)
+### Accepting deliveries to deliver (PATCH)
 
-Endpoint: `/deliveries/:deliveryId/delivery-man/accept`.
+Endpoint: `/delivery-men/delivery/:deliveryId/accept`.
 
 Here you will be able to accept a delivery to a delivery man, after the
 accepting, he will be able to withdraw this delivery and then deliver it. This
@@ -315,9 +330,9 @@ There are some information you should know:
 
 1. The return from this route is void.
 
-#### Withdrawing a delivery (PATCH)
+### Withdrawing a delivery (PATCH)
 
-Endpoint: `/deliveries/:deliveryId/delivery-man/withdraw`.
+Endpoint: `/delivery-men/deliveries/:deliveryId/withdraw`.
 
 After accepting a delivery, delivery man will have an option to withdraw this
 delivery and deliver it to the recipient. This route requires athentication for
@@ -331,3 +346,23 @@ Request property | Description | Required
 There are some information you should know:
 
 1. The return from this route is void.
+
+### Finishing a deliveries (PATCH)
+
+Endpoint: `/delivery-men/deliveries/:deliveryId/finish`.
+
+When the delivery is being delivered, the delivery man will be able to finish it.
+This route requires the delivery id that comes inside the route params, and a
+client's signature photo.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`deliveryId` | The delivery id, it goes inside the route params and will be used by the API for multiple checks | :heavy_check_mark:
+`signature-photo` | This will be saved inside the API according storage provider and inside the database | :heavy_check_mark:
+
+There are some information you should know:
+
+1. The return from this route is void.
+2. You can't finish a delivery that does not exist;
+3. You can't finish a delivery that does not have a recipient;
+4. You can't finish a delivery that has already been finished.

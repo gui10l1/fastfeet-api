@@ -163,6 +163,47 @@ describe('FinishDeliveries', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
+  it('should not be able to finish a delivery that has already been finished', async () => {
+    const client = await fakeClientsRepository.create({
+      email: 'janedoe@exemple.com',
+      name: 'Jena Doe',
+      password: '123456',
+    });
+
+    const deliveryMan = await fakeUsersRepository.create({
+      cpf: '11111111111',
+      email: 'johntre@exemple.com',
+      name: 'John Tre',
+      password: '123456',
+    });
+
+    const delivery = await fakeDeliveriesRepository.create({
+      address: 'Fake address',
+      city: 'Fake city',
+      neighborhood: 'Fake neighborhood',
+      postalCode: 'Postal code',
+      product: 'Product to be delivered',
+      recipientId: client.id,
+      state: 'Fake state',
+    });
+
+    await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryMan.id);
+    await fakeDeliveriesRepository.withdrawDelivery(delivery, new Date());
+    await fakeDeliveriesRepository.finishDelivery(
+      delivery,
+      new Date(),
+      'signaturePhoto.png',
+    );
+
+    await expect(
+      finishDeliveriesService.execute({
+        deliveryId: delivery.id,
+        deliveryManId: deliveryMan.id,
+        signaturePhotoFile: 'signaturePhoto.png',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
   it('should be able to finish a delivery', async () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2021, 4, 10, 10, 30, 0).getTime();
