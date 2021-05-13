@@ -28,4 +28,44 @@ export default class ProductsRepository implements IProductsRepository {
       where: { id: productId },
     });
   }
+
+  public async addQuantityInStock(
+    product: Product,
+    quantity: number,
+  ): Promise<Product> {
+    const updatedProduct = this.ormRepository.merge(product, {
+      quantity_in_stock: product.quantity_in_stock + quantity,
+    });
+
+    await this.ormRepository.save(updatedProduct);
+
+    return updatedProduct;
+  }
+
+  public async removeQuantityFromStock(
+    product: Product,
+    quantity: number,
+  ): Promise<Product> {
+    const updatedProduct = this.ormRepository.merge(product, {
+      quantity_in_stock: product.quantity_in_stock - quantity,
+    });
+
+    await this.ormRepository.save(updatedProduct);
+
+    return updatedProduct;
+  }
+
+  public async edit(
+    product: Product,
+    data: Partial<IProductsRepositoryDTO>,
+  ): Promise<Product> {
+    const updatedProduct = this.ormRepository.merge(product, {
+      quantity_in_stock: data.quantityInStock,
+      ...data,
+    });
+
+    await this.ormRepository.save(updatedProduct);
+
+    return updatedProduct;
+  }
 }

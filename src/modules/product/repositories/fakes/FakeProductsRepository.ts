@@ -13,7 +13,7 @@ export default class FakeProductsRepository implements IProductsRepository {
 
     Object.assign(product, {
       id: v4(),
-      product_in_stock: data.quantityInStock,
+      quantity_in_stock: data.quantityInStock,
       ...data,
     });
 
@@ -24,5 +24,57 @@ export default class FakeProductsRepository implements IProductsRepository {
 
   public async findById(productId: string): Promise<Product | undefined> {
     return this.products.find(product => product.id === productId);
+  }
+
+  public async addQuantityInStock(
+    product: Product,
+    quantity: number,
+  ): Promise<Product> {
+    const findProductIndex = this.products.findIndex(
+      item => item.id === product.id,
+    );
+
+    Object.assign(product, {
+      quantity_in_stock: product.quantity_in_stock + quantity,
+    });
+
+    this.products[findProductIndex] = product;
+
+    return product;
+  }
+
+  public async removeQuantityFromStock(
+    product: Product,
+    quantity: number,
+  ): Promise<Product> {
+    const findProductIndex = this.products.findIndex(
+      item => item.id === product.id,
+    );
+
+    Object.assign(product, {
+      quantity_in_stock: product.quantity_in_stock - quantity,
+    });
+
+    this.products[findProductIndex] = product;
+
+    return product;
+  }
+
+  public async edit(
+    product: Product,
+    data: Partial<IProductsRepositoryDTO>,
+  ): Promise<Product> {
+    const findProductIndex = this.products.findIndex(
+      item => item.id === product.id,
+    );
+
+    Object.assign(product, {
+      product_in_stock: data.quantityInStock,
+      ...data,
+    });
+
+    this.products[findProductIndex] = product;
+
+    return product;
   }
 }
