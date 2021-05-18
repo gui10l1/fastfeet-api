@@ -1,14 +1,20 @@
 import { Router } from 'express';
 import { celebrate, Segments, Joi } from 'celebrate';
 
+import Middlewares from '@shared/infra/http/middlewares/Middlewares';
 import UsersController from '../controllers/UsersController';
-import ensureAuthentication from '../middlewares/ensureAuthentication';
 
 const userRoutes = Router();
 const usersController = new UsersController();
+const { ensureAuthentication, ensurePermissions } = new Middlewares();
 
 // GET
-userRoutes.get('/', usersController.index);
+userRoutes.get(
+  '/',
+  ensureAuthentication,
+  ensurePermissions,
+  usersController.index,
+);
 userRoutes.get(
   '/:id',
   celebrate({ [Segments.PARAMS]: { id: Joi.string().uuid().required() } }),

@@ -26,6 +26,18 @@ export default class FakeProductsRepository implements IProductsRepository {
     return this.products.find(product => product.id === productId);
   }
 
+  public async addPhotos(product: Product, photos: string[]): Promise<Product> {
+    const productIndex = this.products.findIndex(
+      item => item.id === product.id,
+    );
+
+    product.photos.push(...photos);
+
+    this.products[productIndex] = product;
+
+    return product;
+  }
+
   public async addQuantityInStock(
     product: Product,
     quantity: number,
@@ -74,6 +86,25 @@ export default class FakeProductsRepository implements IProductsRepository {
     });
 
     this.products[findProductIndex] = product;
+
+    return product;
+  }
+
+  public async deletePhotos(
+    product: Product,
+    photos: string[],
+  ): Promise<Product> {
+    const productIndex = this.products.findIndex(
+      item => item.id === product.id,
+    );
+
+    photos.forEach(photo => {
+      const findPhotoIndex = product.photos.findIndex(item => item === photo);
+
+      product.photos.splice(findPhotoIndex, 1);
+    });
+
+    this.products[productIndex] = product;
 
     return product;
   }

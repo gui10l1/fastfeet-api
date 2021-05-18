@@ -6,6 +6,7 @@ import clientSessionRoutes from '@modules/client/infra/http/routes/session.route
 import clientRoutes from '@modules/client/infra/http/routes/client.routes';
 import deliveryRoutes from '@modules/delivery/infra/http/routes/delivery.routes';
 import deliveryManRoutes from '@modules/delivery/infra/http/routes/deliveryman.routes';
+import productRoutes from '@modules/product/infra/http/routes/products.routes';
 
 const routes = Router();
 
@@ -14,5 +15,6 @@ routes.use('/sessions', userSessionRoutes, clientSessionRoutes);
 routes.use('/clients', clientRoutes);
 routes.use('/deliveries', deliveryRoutes);
 routes.use('/delivery-men', deliveryManRoutes);
+routes.use('/products', productRoutes);
 
 export default routes;

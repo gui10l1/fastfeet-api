@@ -29,6 +29,14 @@ export default class ProductsRepository implements IProductsRepository {
     });
   }
 
+  public async addPhotos(product: Product, photos: string[]): Promise<Product> {
+    product.photos.push(...photos);
+
+    await this.ormRepository.save(product);
+
+    return product;
+  }
+
   public async addQuantityInStock(
     product: Product,
     quantity: number,
@@ -67,5 +75,20 @@ export default class ProductsRepository implements IProductsRepository {
     await this.ormRepository.save(updatedProduct);
 
     return updatedProduct;
+  }
+
+  public async deletePhotos(
+    product: Product,
+    photos: string[],
+  ): Promise<Product> {
+    photos.forEach(photo => {
+      const findPhotoIndex = product.photos.findIndex(item => item === photo);
+
+      product.photos.splice(findPhotoIndex, 1);
+    });
+
+    await this.ormRepository.save(product);
+
+    return product;
   }
 }

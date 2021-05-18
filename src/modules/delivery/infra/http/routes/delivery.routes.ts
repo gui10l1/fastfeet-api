@@ -1,12 +1,15 @@
-import ensureAuthentication from '@modules/user/infra/http/middlewares/ensureAuthentication';
-import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
+import { celebrate, Joi, Segments } from 'celebrate';
+
+import Middlewares from '@shared/infra/http/middlewares/Middlewares';
+
 import CancelDeliveriesController from '../controllers/deliveries/CancelDeliveriesController';
 import DeliveriesController from '../controllers/deliveries/DeliveriesController';
 
 const deliveryRoutes = Router();
 const deliveriesController = new DeliveriesController();
 const cancelDeliveriesController = new CancelDeliveriesController();
+const { ensureAuthentication } = new Middlewares();
 
 deliveryRoutes.use(ensureAuthentication);
 

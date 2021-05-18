@@ -8,4 +8,20 @@ export default class FakeStorageProvider implements IStorageProvider {
 
     return filename;
   }
+
+  public async saveFiles(files: string[]): Promise<string[]> {
+    files.forEach(file => {
+      this.files.push(file);
+    });
+
+    return files;
+  }
+
+  public async deleteFiles(files: string[]): Promise<void> {
+    files.forEach(file => {
+      const fileIndex = this.files.findIndex(item => item === file);
+
+      this.files.splice(fileIndex, 1);
+    });
+  }
 }

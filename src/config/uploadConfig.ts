@@ -21,7 +21,7 @@ export default {
       uploadDirectory: path.resolve(tmpDirectory, 'uploads'),
       tmpDirectory,
       storage: multer.diskStorage({
-        destination: path.resolve(tmpDirectory, 'uploads'),
+        destination: path.resolve(tmpDirectory),
         filename: (_, file, cb) => {
           const fileName = `${Date.now()}-${file.originalname}`;
 

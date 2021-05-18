@@ -10,4 +10,6 @@ export default interface IProductsRepository {
     product: Product,
     data: Partial<IProductsRepositoryDTO>,
   ): Promise<Product>;
+  addPhotos(product: Product, photos: string[]): Promise<Product>;
+  deletePhotos(product: Product, photos: string[]): Promise<Product>;
 }

@@ -13,4 +13,32 @@ export default class DiskStorageProvider implements IStorageProvider {
 
     return filename;
   }
+
+  public async saveFiles(files: string[]): Promise<string[]> {
+    files.forEach(async file => {
+      await fs.promises.rename(
+        path.resolve(uploadConfig.config.multer.tmpDirectory, file),
+        path.resolve(uploadConfig.config.multer.uploadDirectory),
+      );
+    });
+
+    return files;
+  }
+
+  public async deleteFiles(files: string[]): Promise<void> {
+    files.forEach(async file => {
+      const filePath = path.resolve(
+        uploadConfig.config.multer.uploadDirectory,
+        file,
+      );
+
+      try {
+        await fs.promises.stat(filePath);
+      } catch {
+        return;
+      }
+
+      await fs.promises.unlink(filePath);
+    });
+  }
 }

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import uploadConfig from '@config/uploadConfig';
-import ensureAuthentication from '@modules/user/infra/http/middlewares/ensureAuthentication';
+import Middlewares from '@shared/infra/http/middlewares/Middlewares';
 
 import { celebrate, Joi, Segments } from 'celebrate';
 import AcceptDeliveriesController from '../controllers/deliverymen/AcceptDeliveriesController';
@@ -20,6 +20,7 @@ const finishedDeliveriesController = new FinishedDeliveriesController();
 const finishDeliveriesController = new FinishDeliveriesController();
 const withdrawDeliveriesService = new WithdrawDeliveriesController();
 const acceptDeliveriesController = new AcceptDeliveriesController();
+const { ensureAuthentication } = new Middlewares();
 
 deliveryManRoutes.use(ensureAuthentication);
 

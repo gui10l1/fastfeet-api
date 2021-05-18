@@ -1,16 +1,11 @@
 import { inject, injectable } from 'tsyringe';
 
-import IUsersRepository from '@modules/user/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
+import IStorageProvider from '@shared/providers/StorageProvider/models/IStorageProvider';
 
 import IProductsRepositoryDTO from '../dtos/IProductsRepositoryDTO';
 import Product from '../infra/database/typeorm/entities/Product';
 import IProductsRepository from '../repositories/IProductsRepository';
-
-interface IRequest {
-  userId: string;
-  data: IProductsRepositoryDTO;
-}
 
 @injectable()
 export default class CreateProductsService {
@@ -18,26 +13,18 @@ export default class CreateProductsService {
     @inject('ProductsRepository')
     private productsRepository: IProductsRepository,
 
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
   ) {}
 
-  public async execute({ userId, data }: IRequest): Promise<Product> {
-    const findUser = await this.usersRepository.findById(userId);
-
-    if (!findUser) {
-      throw new AppError('User not found!', 404);
-    }
-
-    if (findUser.deliveryman) {
-      throw new AppError('You do not have permissions to do such action!', 403);
-    }
-
+  public async execute(data: IProductsRepositoryDTO): Promise<Product> {
     if (data.quantityInStock <= 0) {
       throw new AppError('Product quantity needs to be different of zero!');
     }
 
     const product = await this.productsRepository.create(data);
+
+    await this.storageProvider.saveFiles(data.photos);
 
     return product;
   }

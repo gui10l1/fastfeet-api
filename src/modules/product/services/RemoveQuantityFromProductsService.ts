@@ -1,4 +1,3 @@
-import IUsersRepository from '@modules/user/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 import Product from '../infra/database/typeorm/entities/Product';
@@ -6,7 +5,6 @@ import IProductsRepository from '../repositories/IProductsRepository';
 
 interface IRequest {
   productId: string;
-  userId: string;
   quantityToBeRemoved: number;
 }
 
@@ -15,26 +13,12 @@ export default class RemoveQuantityFromProductsService {
   constructor(
     @inject('ProductsRepository')
     private productsRepository: IProductsRepository,
-
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
   ) {}
 
   public async execute({
-    userId,
     productId,
     quantityToBeRemoved,
   }: IRequest): Promise<Product> {
-    const findUser = await this.usersRepository.findById(userId);
-
-    if (!findUser) {
-      throw new AppError('User not found!', 404);
-    }
-
-    if (findUser.deliveryman) {
-      throw new AppError('You do not have permissions to do such action!', 403);
-    }
-
     const findProduct = await this.productsRepository.findById(productId);
 
     if (!findProduct) {
