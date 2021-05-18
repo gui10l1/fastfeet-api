@@ -36,9 +36,12 @@ productRoutes.post(
 
 // PUT
 productRoutes.put(
-  '/',
+  '/:productId',
   ensurePermissions,
   celebrate({
+    [Segments.PARAMS]: {
+      productId: Joi.string().uuid(),
+    },
     [Segments.BODY]: {
       name: Joi.string(),
       price: Joi.number(),
@@ -55,12 +58,23 @@ productRoutes.patch(
   '/:productId/add-photos',
   upload.array('photos'),
   ensurePermissions,
+  celebrate({
+    [Segments.PARAMS]: {
+      productId: Joi.string().uuid(),
+    },
+    [Segments.BODY]: {
+      productId: Joi.string().uuid(),
+    },
+  }),
   productPhotosController.create,
 );
 productRoutes.patch(
   '/:productId/add-quantity',
   ensurePermissions,
   celebrate({
+    [Segments.PARAMS]: {
+      productId: Joi.string().uuid(),
+    },
     [Segments.BODY]: {
       quantity: Joi.number().required(),
     },
@@ -71,6 +85,9 @@ productRoutes.patch(
   '/:productId/remove-photos',
   ensurePermissions,
   celebrate({
+    [Segments.PARAMS]: {
+      productId: Joi.string().uuid(),
+    },
     [Segments.BODY]: {
       photos: Joi.array().required(),
     },
@@ -81,6 +98,9 @@ productRoutes.patch(
   '/:productId/remove-quantity',
   ensurePermissions,
   celebrate({
+    [Segments.PARAMS]: {
+      productId: Joi.string().uuid(),
+    },
     [Segments.BODY]: {
       quantity: Joi.number().required(),
     },

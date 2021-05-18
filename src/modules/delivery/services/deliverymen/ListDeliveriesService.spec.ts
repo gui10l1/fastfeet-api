@@ -16,7 +16,8 @@ describe('ListDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'Product to be delivered',
+      productQuantity: 5,
       recipientId: '',
       state: 'Fake state',
     };

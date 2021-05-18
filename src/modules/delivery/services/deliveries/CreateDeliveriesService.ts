@@ -4,6 +4,7 @@ import path from 'path';
 import IClientsRepository from '@modules/client/repositories/IClientsRepository';
 import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
+import IProductsRepository from '@modules/product/repositories/IProductsRepository';
 
 import IDeliveriesRepositoryDTO from '../../dtos/IDeliveriesRepositoryDTO';
 import Delivery from '../../infra/database/typeorm/entities/Delivery';
@@ -16,20 +17,43 @@ export default class CreateDeliveriesService {
     private deliveriesRepository: IDeliveriesRepository,
 
     @inject('ClientsRepository')
-    private clientRepository: IClientsRepository,
+    private clientsRepository: IClientsRepository,
+
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
   ) {}
 
   public async execute(data: IDeliveriesRepositoryDTO): Promise<Delivery> {
-    const findClient = await this.clientRepository.findById(data.recipientId);
+    const findClient = await this.clientsRepository.findById(data.recipientId);
 
     if (!findClient) {
       throw new AppError('Client not found', 404);
     }
 
+    const findProduct = await this.productsRepository.findById(data.productId);
+
+    if (!findProduct) {
+      throw new AppError(
+        'The product of this delivery request was not found!',
+        404,
+      );
+    }
+
+    if (data.productQuantity > findProduct.quantity_in_stock) {
+      throw new AppError(
+        'There is no enough quantity of this product in stock for this delivery',
+      );
+    }
+
     const delivery = await this.deliveriesRepository.create(data);
+
+    await this.productsRepository.removeQuantityFromStock(
+      findProduct,
+      data.productQuantity,
+    );
 
     const templateFile = path.resolve(
       __dirname,
@@ -50,7 +74,7 @@ export default class CreateDeliveriesService {
         templateFile,
         variables: {
           clientName: findClient.name,
-          product: data.product,
+          product: findProduct.name,
           postalCode: data.postalCode,
           neighborhood: data.neighborhood,
           city: data.city,

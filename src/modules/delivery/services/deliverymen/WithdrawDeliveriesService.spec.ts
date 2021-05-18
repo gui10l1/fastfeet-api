@@ -39,9 +39,10 @@ describe('WithdrawDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await expect(
@@ -65,9 +66,10 @@ describe('WithdrawDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await expect(
@@ -95,9 +97,10 @@ describe('WithdrawDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryMan.id);
@@ -132,9 +135,10 @@ describe('WithdrawDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'Product to be delivered',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryMan.id);

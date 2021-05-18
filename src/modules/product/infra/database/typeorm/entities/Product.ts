@@ -1,7 +1,9 @@
+import Delivery from '@modules/delivery/infra/database/typeorm/entities/Delivery';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -25,6 +27,9 @@ export default class Product {
 
   @Column('varchar', { array: true })
   photos: string[];
+
+  @OneToMany(() => Delivery, delivery => delivery.product)
+  deliveries: Delivery[];
 
   @CreateDateColumn()
   created_at: Date;
