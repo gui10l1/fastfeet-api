@@ -1,12 +1,13 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 
-import ensureAuthentication from '@modules/user/infra/http/middlewares/ensureAuthentication';
+import Middlewares from '@shared/infra/http/middlewares/Middlewares';
 
 import ClientsController from '../controllers/ClientsController';
 
 const clientRoutes = Router();
 const clientsController = new ClientsController();
+const { ensureAuthentication } = new Middlewares();
 
 // GET
 clientRoutes.get('/', ensureAuthentication, clientsController.find);

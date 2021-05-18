@@ -5,9 +5,6 @@ import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 import { errors } from 'celebrate';
 
-// Routes
-import routes from './routes';
-
 // Client errors
 import AppError from '../../errors/AppError';
 
@@ -16,6 +13,9 @@ import '../database/typeorm/connection';
 
 // Containers
 import '../../containers';
+
+// Routes
+import routes from './routes';
 
 const app = express();
 

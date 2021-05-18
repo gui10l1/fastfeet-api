@@ -67,8 +67,7 @@ export default class UpdateClientsService {
         template: {
           templateFile,
           variables: {
-            name: data.name || findClientToBeUpdated.name,
-            newEmail: data.email,
+            clientName: data.name || findClientToBeUpdated.name,
           },
         },
       });
