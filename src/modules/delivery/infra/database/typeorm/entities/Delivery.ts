@@ -1,7 +1,10 @@
+import Product from '@modules/product/infra/database/typeorm/entities/Product';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,8 +20,8 @@ export default class Delivery {
   @Column('uuid')
   recipient_id: string;
 
-  @Column('varchar', { length: 255 })
-  product: string;
+  @Column('uuid')
+  product_id: string;
 
   @Column('varchar', { length: 255 })
   address: string;
@@ -46,6 +49,13 @@ export default class Delivery {
 
   @Column('timestamp with time zone')
   end_date: Date;
+
+  @Column('int')
+  product_quantity: number;
+
+  @ManyToOne(() => Product, product => product.deliveries)
+  @JoinColumn({ name: 'product_id' })
+  product: Product;
 
   @CreateDateColumn()
   created_at: Date;

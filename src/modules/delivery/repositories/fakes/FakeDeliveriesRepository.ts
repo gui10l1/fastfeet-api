@@ -13,6 +13,8 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
 
     Object.assign(delivery, {
       id: v4(),
+      product_id: data.productId,
+      product_quantity: data.productQuantity,
       recipient_id: data.recipientId,
       postal_code: data.postalCode,
       ...data,

@@ -23,9 +23,10 @@ describe('AcceptDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await expect(
@@ -50,9 +51,10 @@ describe('AcceptDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await expect(
@@ -92,9 +94,10 @@ describe('AcceptDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, 'delivery-man-id');
@@ -125,9 +128,10 @@ describe('AcceptDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await acceptDeliveriesService.execute({

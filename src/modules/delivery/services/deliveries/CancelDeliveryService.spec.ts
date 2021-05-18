@@ -27,9 +27,10 @@ describe('CancelDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: '',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await expect(
@@ -73,9 +74,10 @@ describe('CancelDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: client.id,
+      productId: 'product_id',
       state: 'Fake state',
+      productQuantity: 5,
+      recipientId: client.id,
     });
 
     await expect(
@@ -100,9 +102,10 @@ describe('CancelDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: client.id,
+      productId: 'product_id',
       state: 'Fake state',
+      productQuantity: 5,
+      recipientId: client.id,
     });
 
     await cancelDeliveriesService.execute({
@@ -129,9 +132,10 @@ describe('CancelDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: client.id,
+      productId: 'product_id',
       state: 'Fake state',
+      productQuantity: 5,
+      recipientId: client.id,
     });
 
     await cancelDeliveriesService.execute({

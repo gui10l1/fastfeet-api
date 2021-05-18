@@ -7,7 +7,7 @@ import IUsersRepository from '@modules/user/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 import { format } from 'date-fns';
-// import IStorageProvider from '@shared/providers/StorageProvider/models/IStorageProvider';
+import IStorageProvider from '@shared/providers/StorageProvider/models/IStorageProvider';
 
 interface IRequest {
   deliveryId: string;
@@ -29,6 +29,9 @@ export default class FinishDeliveriesService {
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
   ) {}
 
   public async execute({
@@ -75,6 +78,8 @@ export default class FinishDeliveriesService {
       new Date(dateToday),
       signaturePhotoFile,
     );
+
+    await this.storageProvider.saveFile(signaturePhotoFile);
 
     const templateFile = path.resolve(
       __dirname,

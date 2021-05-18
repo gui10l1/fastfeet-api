@@ -18,7 +18,7 @@ deliveryRoutes.post(
   celebrate({
     [Segments.BODY]: {
       postalCode: Joi.string().required(),
-      product: Joi.string().required(),
+      productId: Joi.string().uuid().required(),
       address: Joi.string().required(),
       neighborhood: Joi.string().required(),
       city: Joi.string().required(),

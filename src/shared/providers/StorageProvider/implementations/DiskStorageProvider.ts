@@ -8,7 +8,7 @@ export default class DiskStorageProvider implements IStorageProvider {
   public async saveFile(filename: string): Promise<string> {
     await fs.promises.rename(
       path.resolve(uploadConfig.config.multer.tmpDirectory, filename),
-      path.resolve(uploadConfig.config.multer.uploadDirectory),
+      path.resolve(uploadConfig.config.multer.uploadDirectory, filename),
     );
 
     return filename;
@@ -18,7 +18,7 @@ export default class DiskStorageProvider implements IStorageProvider {
     files.forEach(async file => {
       await fs.promises.rename(
         path.resolve(uploadConfig.config.multer.tmpDirectory, file),
-        path.resolve(uploadConfig.config.multer.uploadDirectory),
+        path.resolve(uploadConfig.config.multer.uploadDirectory, file),
       );
     });
 

@@ -13,6 +13,8 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
   public async create(data: IDeliveriesRepositoryDTO): Promise<Delivery> {
     const delivery = this.ormRepository.create({
       ...data,
+      product_id: data.productId,
+      product_quantity: data.productQuantity,
       recipient_id: data.recipientId,
       postal_code: data.postalCode,
     });

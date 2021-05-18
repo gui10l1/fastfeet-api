@@ -4,4 +4,6 @@ ormconfig.json
 .env
 coverage
 /temp/uploads/*
+!/temp/uploads/.gitkeep
 .vscode
+yarn-error.log

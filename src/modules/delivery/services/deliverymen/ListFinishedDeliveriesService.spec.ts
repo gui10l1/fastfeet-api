@@ -54,9 +54,10 @@ describe('ListFinishedDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     const deliveryTwo = await fakeDeliveriesRepository.create({
@@ -64,15 +65,20 @@ describe('ListFinishedDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(deliveryOne, deliveryMan.id);
     await fakeDeliveriesRepository.acceptDelivery(deliveryTwo, deliveryMan.id);
 
-    await fakeDeliveriesRepository.finishDelivery(deliveryOne, new Date());
+    await fakeDeliveriesRepository.finishDelivery(
+      deliveryOne,
+      new Date(),
+      'signaturePhoto.png',
+    );
 
     const finishedDeliveries = await listFinishedDeliveriesService.execute({
       deliveryManId: deliveryMan.id,

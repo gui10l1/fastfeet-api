@@ -3,7 +3,7 @@ import FakeDeliveriesRepository from '@modules/delivery/repositories/fakes/FakeD
 import FakeUsersRepository from '@modules/user/repositories/fakes/FakeUsersRepository';
 import AppError from '@shared/errors/AppError';
 import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
-// import FakeStorageProvider from '@shared/providers/StorageProvider/fakes/FakeStorageProvider';
+import FakeStorageProvider from '@shared/providers/StorageProvider/fakes/FakeStorageProvider';
 
 import FinishDeliveriesService from './FinishDeliveriesService';
 
@@ -11,7 +11,7 @@ let fakeDeliveriesRepository: FakeDeliveriesRepository;
 let fakeClientsRepository: FakeClientsRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeMailProvider: FakeMailProvider;
-// let fakeStorageProvider: FakeStorageProvider;
+let fakeStorageProvider: FakeStorageProvider;
 let finishDeliveriesService: FinishDeliveriesService;
 
 describe('FinishDeliveries', () => {
@@ -20,12 +20,13 @@ describe('FinishDeliveries', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeClientsRepository = new FakeClientsRepository();
     fakeMailProvider = new FakeMailProvider();
-    // fakeStorageProvider = new FakeStorageProvider();
+    fakeStorageProvider = new FakeStorageProvider();
     finishDeliveriesService = new FinishDeliveriesService(
       fakeDeliveriesRepository,
       fakeClientsRepository,
       fakeUsersRepository,
       fakeMailProvider,
+      fakeStorageProvider,
     );
   });
 
@@ -43,7 +44,7 @@ describe('FinishDeliveries', () => {
         deliveryManId: deliveryMan.id,
         signaturePhotoFile: 'signaturePhoto.png',
       }),
-    );
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to finish a delivery from a non-existing man', async () => {
@@ -52,9 +53,10 @@ describe('FinishDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: '',
+      productId: 'product_id',
+      recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await expect(
@@ -86,9 +88,10 @@ describe('FinishDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: '',
+      productId: 'product_id',
+      recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryManTwo.id);
@@ -116,9 +119,10 @@ describe('FinishDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: '',
+      productId: 'product_id',
+      recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryMan.id);
@@ -145,9 +149,10 @@ describe('FinishDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: '',
+      productId: 'product_id',
+      recipientId: 'recipient_id',
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryMan.id);
@@ -182,9 +187,10 @@ describe('FinishDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
+      productId: 'product_id',
       recipientId: client.id,
       state: 'Fake state',
+      productQuantity: 5,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryMan.id);
@@ -227,9 +233,10 @@ describe('FinishDeliveries', () => {
       city: 'Fake city',
       neighborhood: 'Fake neighborhood',
       postalCode: 'Postal code',
-      product: 'Product to be delivered',
-      recipientId: client.id,
+      productId: 'Product to be delivered',
+      productQuantity: 5,
       state: 'Fake state',
+      recipientId: client.id,
     });
 
     await fakeDeliveriesRepository.acceptDelivery(delivery, deliveryMan.id);
