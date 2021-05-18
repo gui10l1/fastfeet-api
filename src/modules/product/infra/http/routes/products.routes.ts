@@ -33,22 +33,6 @@ productRoutes.post(
   }),
   productsController.create,
 );
-productRoutes.post(
-  '/:productId/photos',
-  upload.array('photos'),
-  ensurePermissions,
-  productPhotosController.create,
-);
-productRoutes.post(
-  '/:productId/quantity',
-  ensurePermissions,
-  celebrate({
-    [Segments.BODY]: {
-      quantity: Joi.number().required(),
-    },
-  }),
-  productQuantitiesController.create,
-);
 
 // PUT
 productRoutes.put(
@@ -68,7 +52,23 @@ productRoutes.put(
 
 // PATCH
 productRoutes.patch(
-  '/:productId/photos',
+  '/:productId/add-photos',
+  upload.array('photos'),
+  ensurePermissions,
+  productPhotosController.create,
+);
+productRoutes.patch(
+  '/:productId/add-quantity',
+  ensurePermissions,
+  celebrate({
+    [Segments.BODY]: {
+      quantity: Joi.number().required(),
+    },
+  }),
+  productQuantitiesController.create,
+);
+productRoutes.patch(
+  '/:productId/remove-photos',
   ensurePermissions,
   celebrate({
     [Segments.BODY]: {
@@ -78,7 +78,7 @@ productRoutes.patch(
   productPhotosController.update,
 );
 productRoutes.patch(
-  '/:productId/quantity',
+  '/:productId/remove-quantity',
   ensurePermissions,
   celebrate({
     [Segments.BODY]: {

@@ -13,14 +13,6 @@ const { ensureAuthentication } = new Middlewares();
 
 deliveryRoutes.use(ensureAuthentication);
 
-deliveryRoutes.get(
-  '/cancel/:deliveryId',
-  celebrate({
-    [Segments.PARAMS]: { deliveryId: Joi.string().uuid().required() },
-  }),
-  cancelDeliveriesController.index,
-);
-
 deliveryRoutes.post(
   '/',
   celebrate({
@@ -34,6 +26,14 @@ deliveryRoutes.post(
     },
   }),
   deliveriesController.create,
+);
+
+deliveryRoutes.patch(
+  '/cancel/:deliveryId',
+  celebrate({
+    [Segments.PARAMS]: { deliveryId: Joi.string().uuid().required() },
+  }),
+  cancelDeliveriesController.index,
 );
 
 export default deliveryRoutes;
