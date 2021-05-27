@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
 import IUsersRepository from '@modules/user/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 interface IRequest {
   deliveryId: string;
@@ -17,6 +18,9 @@ export default class AcceptDeliveriesService {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ deliveryId, deliveryManId }: IRequest): Promise<void> {
@@ -41,6 +45,10 @@ export default class AcceptDeliveriesService {
         'This delivery has already been accepted by another delivery man',
       );
     }
+
+    const cacheKey = `delivery-man:${deliveryManId}:deliveries`;
+
+    await this.cacheProvider.delete(cacheKey);
 
     return this.deliveriesRepository.acceptDelivery(
       findDelivery,

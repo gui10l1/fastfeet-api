@@ -2,6 +2,7 @@ import FakeClientsRepository from '@modules/client/repositories/fakes/FakeClient
 import FakeDeliveriesRepository from '@modules/delivery/repositories/fakes/FakeDeliveriesRepository';
 import FakeUsersRepository from '@modules/user/repositories/fakes/FakeUsersRepository';
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
 import FakeStorageProvider from '@shared/providers/StorageProvider/fakes/FakeStorageProvider';
 
@@ -11,6 +12,7 @@ let fakeDeliveriesRepository: FakeDeliveriesRepository;
 let fakeClientsRepository: FakeClientsRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeMailProvider: FakeMailProvider;
+let fakeCacheProvider: FakeCacheProvider;
 let fakeStorageProvider: FakeStorageProvider;
 let finishDeliveriesService: FinishDeliveriesService;
 
@@ -20,6 +22,7 @@ describe('FinishDeliveries', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeClientsRepository = new FakeClientsRepository();
     fakeMailProvider = new FakeMailProvider();
+    fakeCacheProvider = new FakeCacheProvider();
     fakeStorageProvider = new FakeStorageProvider();
     finishDeliveriesService = new FinishDeliveriesService(
       fakeDeliveriesRepository,
@@ -27,6 +30,7 @@ describe('FinishDeliveries', () => {
       fakeUsersRepository,
       fakeMailProvider,
       fakeStorageProvider,
+      fakeCacheProvider,
     );
   });
 

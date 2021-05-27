@@ -4,6 +4,7 @@ import { getHours } from 'date-fns';
 import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
 import IUsersRepository from '@modules/user/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 interface IRequest {
   deliveryId: string;
@@ -18,6 +19,9 @@ export default class WithdrawDeliveriesService {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ deliveryId, deliveryManId }: IRequest): Promise<void> {
@@ -43,7 +47,8 @@ export default class WithdrawDeliveriesService {
 
     if (hoursNow < 8 || hoursNow > 12) {
       throw new AppError(
-        'You are allowed to withdraw deliveries between 8am and 12pm',
+        'You are not allowed to withdraw deliveries before 8am and after 12pm',
+        403,
       );
     }
 
@@ -51,5 +56,9 @@ export default class WithdrawDeliveriesService {
       findDelivery,
       new Date(dateFromToday),
     );
+
+    const cacheKey = `delivery-man:${deliveryManId}:deliveries`;
+
+    await this.cacheProvider.delete(cacheKey);
   }
 }

@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 import IUsersRepository from '../../repositories/IUsersRepository';
 
 interface IRequest {
@@ -14,6 +15,9 @@ export default class DeleteUsersService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ userLogged, userToDelete }: IRequest): Promise<void> {
@@ -46,5 +50,7 @@ export default class DeleteUsersService {
     }
 
     await this.usersRepository.delete(findUserToDelete);
+
+    await this.cacheProvider.delete('users-list');
   }
 }

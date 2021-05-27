@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import mailConfig from '@config/mailConfig';
 import uploadConfig from '@config/uploadConfig';
 
+import cacheConfig from '@config/cacheConfig';
 import HashProvider from '../HashProvider/implementations/HashProvider';
 import IHashProvider from '../HashProvider/models/IHashProvider';
 
@@ -14,6 +15,8 @@ import IMailTemplateProvider from '../MailTemplateProvider/models/IMailTemplateP
 
 import DiskStorageProvider from '../StorageProvider/implementations/DiskStorageProvider';
 import IStorageProvider from '../StorageProvider/models/IStorageProvider';
+import ICacheProvider from '../CacheProvider/models/ICacheProvider';
+import RedisProvider from '../CacheProvider/implementations/RedisProvider';
 
 const mailProviderType = {
   sandbox: SandBoxMailProvider,
@@ -21,6 +24,10 @@ const mailProviderType = {
 
 const storageProviderType = {
   disk: DiskStorageProvider,
+};
+
+const cacheProviderType = {
+  redis: RedisProvider,
 };
 
 container.registerSingleton<IHashProvider>('HashProvider', HashProvider);
@@ -38,4 +45,9 @@ container.registerInstance<IMailProvider>(
 container.registerSingleton<IStorageProvider>(
   'StorageProvider',
   storageProviderType[uploadConfig.type],
+);
+
+container.registerSingleton<ICacheProvider>(
+  'CacheProvider',
+  cacheProviderType[cacheConfig.type],
 );

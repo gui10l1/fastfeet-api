@@ -1,11 +1,13 @@
 import FakeClientsRepository from '@modules/client/repositories/fakes/FakeClientsRepository';
 import FakeDeliveriesRepository from '@modules/delivery/repositories/fakes/FakeDeliveriesRepository';
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
 import CancelDeliveriesService from './CancelDeliveryService';
 
 let fakeDeliveriesRepository: FakeDeliveriesRepository;
 let fakeClientsRepository: FakeClientsRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let fakeMailProvider: FakeMailProvider;
 let cancelDeliveriesService: CancelDeliveriesService;
 
@@ -14,10 +16,12 @@ describe('CancelDeliveries', () => {
     fakeDeliveriesRepository = new FakeDeliveriesRepository();
     fakeClientsRepository = new FakeClientsRepository();
     fakeMailProvider = new FakeMailProvider();
+    fakeCacheProvider = new FakeCacheProvider();
     cancelDeliveriesService = new CancelDeliveriesService(
       fakeDeliveriesRepository,
       fakeClientsRepository,
       fakeMailProvider,
+      fakeCacheProvider,
     );
   });
 

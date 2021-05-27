@@ -8,6 +8,7 @@ import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 import { format } from 'date-fns';
 import IStorageProvider from '@shared/providers/StorageProvider/models/IStorageProvider';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 interface IRequest {
   deliveryId: string;
@@ -32,6 +33,9 @@ export default class FinishDeliveriesService {
 
     @inject('StorageProvider')
     private storageProvider: IStorageProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -107,6 +111,9 @@ export default class FinishDeliveriesService {
       },
     });
 
-    // await this.storageProvider.saveFile(signaturePhotoFile);
+    await this.cacheProvider.delete(
+      `delivery-man:${deliveryManId}:finished-deliveries`,
+    );
+    await this.cacheProvider.delete(`delivery-man:${deliveryManId}:deliveries`);
   }
 }

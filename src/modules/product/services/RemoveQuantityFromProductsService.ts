@@ -1,5 +1,8 @@
-import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
+
+import AppError from '@shared/errors/AppError';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
+
 import Product from '../infra/database/typeorm/entities/Product';
 import IProductsRepository from '../repositories/IProductsRepository';
 
@@ -13,12 +16,17 @@ export default class RemoveQuantityFromProductsService {
   constructor(
     @inject('ProductsRepository')
     private productsRepository: IProductsRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
     productId,
     quantityToBeRemoved,
   }: IRequest): Promise<Product> {
+    const cacheKey = `products-list`;
+
     const findProduct = await this.productsRepository.findById(productId);
 
     if (!findProduct) {
@@ -48,6 +56,8 @@ export default class RemoveQuantityFromProductsService {
       findProduct,
       quantityToBeRemoved,
     );
+
+    await this.cacheProvider.delete(cacheKey);
 
     return updatedProduct;
   }

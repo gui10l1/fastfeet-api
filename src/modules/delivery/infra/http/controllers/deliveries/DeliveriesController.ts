@@ -7,11 +7,12 @@ export default class DeliveriesController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       postalCode,
-      product,
       address,
       neighborhood,
       city,
       state,
+      productId,
+      productQuantity,
     } = req.body;
     const { id: recipientId } = req.user;
 
@@ -22,9 +23,10 @@ export default class DeliveriesController {
       city,
       neighborhood,
       postalCode,
-      product,
+      productId,
       recipientId,
       state,
+      productQuantity,
     });
 
     const response = classToClass(delivery);

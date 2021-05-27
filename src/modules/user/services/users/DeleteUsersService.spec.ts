@@ -1,14 +1,20 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeUsersRepository from '../../repositories/fakes/FakeUsersRepository';
 import DeleteUsersService from './DeleteUsersService';
 
 let fakeUsersRepository: FakeUsersRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let deleteUsersService: DeleteUsersService;
 
 describe('DeleteUsers', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
-    deleteUsersService = new DeleteUsersService(fakeUsersRepository);
+    fakeCacheProvider = new FakeCacheProvider();
+    deleteUsersService = new DeleteUsersService(
+      fakeUsersRepository,
+      fakeCacheProvider,
+    );
   });
 
   it('should not be able for admin to delete a non-exisiting user', async () => {

@@ -37,6 +37,14 @@ export default class ProductsRepository implements IProductsRepository {
     return product;
   }
 
+  public async list(): Promise<Product[]> {
+    return this.ormRepository.find();
+  }
+
+  public async delete(product: Product): Promise<void> {
+    await this.ormRepository.delete(product.id);
+  }
+
   public async addQuantityInStock(
     product: Product,
     quantity: number,

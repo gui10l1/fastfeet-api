@@ -4,6 +4,7 @@ import Delivery from '@modules/delivery/infra/database/typeorm/entities/Delivery
 import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
 import IUsersRepository from '@modules/user/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 interface IRequest {
   deliveryManId: string;
@@ -17,6 +18,9 @@ export default class ListFinishedDeliveriesService {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ deliveryManId }: IRequest): Promise<Delivery[]> {
@@ -30,10 +34,22 @@ export default class ListFinishedDeliveriesService {
       throw new AppError('Invalid user');
     }
 
-    const finishedDeliveries = await this.deliveriesRepository.getDeliveryManFinishedDeliveries(
-      deliveryManId,
-    );
+    const cacheKey = `delivery-man:${deliveryManId}:finished-deliveries`;
+    const cachedDeliveries = await this.cacheProvider.get<Delivery[]>(cacheKey);
 
-    return finishedDeliveries;
+    if (!cachedDeliveries) {
+      const finishedDeliveries = await this.deliveriesRepository.getDeliveryManFinishedDeliveries(
+        deliveryManId,
+      );
+
+      await this.cacheProvider.save(
+        cacheKey,
+        JSON.stringify(finishedDeliveries),
+      );
+
+      return finishedDeliveries;
+    }
+
+    return cachedDeliveries;
   }
 }

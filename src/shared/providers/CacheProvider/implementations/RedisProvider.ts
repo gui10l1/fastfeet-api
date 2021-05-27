@@ -4,7 +4,7 @@ import cacheConfig from '@config/cacheConfig';
 
 import ICacheProvider from '../models/ICacheProvider';
 
-export default class CacheProvider implements ICacheProvider {
+export default class RedisProvider implements ICacheProvider {
   private redisClient: RedisClient;
 
   constructor() {

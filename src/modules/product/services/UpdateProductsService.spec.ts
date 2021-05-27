@@ -1,14 +1,20 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeProductsRepository from '../repositories/fakes/FakeProductsRepository';
 import UpdateProductsService from './UpdateProductsService';
 
 let fakeProductsRepository: FakeProductsRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let updateProductsService: UpdateProductsService;
 
 describe('UpdateProducts', () => {
   beforeEach(() => {
     fakeProductsRepository = new FakeProductsRepository();
-    updateProductsService = new UpdateProductsService(fakeProductsRepository);
+    fakeCacheProvider = new FakeCacheProvider();
+    updateProductsService = new UpdateProductsService(
+      fakeProductsRepository,
+      fakeCacheProvider,
+    );
   });
 
   it('should not be able to update a non-existing product', async () => {

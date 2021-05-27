@@ -1,4 +1,5 @@
 import Delivery from '@modules/delivery/infra/database/typeorm/entities/Delivery';
+import { Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -36,4 +37,9 @@ export default class Product {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: 'imagesUrl' })
+  getImageUrls(): string[] {
+    return this.photos.map(photo => `${process.env.API_URL}/files/${photo}`);
+  }
 }

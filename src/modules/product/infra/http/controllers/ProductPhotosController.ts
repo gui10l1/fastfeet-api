@@ -3,11 +3,16 @@ import { container } from 'tsyringe';
 
 import AddPhotosToProductsService from '@modules/product/services/AddPhotosToProductsService';
 import RemovePhotosFromProductsService from '@modules/product/services/RemovePhotosFromProductsService';
+import AppError from '@shared/errors/AppError';
 
 export default class ProductPhotosController {
   public async create(req: Request, res: Response): Promise<Response> {
     const photos = req.files as Express.Multer.File[];
     const { productId } = req.params;
+
+    if (photos.length === 0) {
+      throw new AppError('You must upload, at least, one photo!');
+    }
 
     const filenames = photos.map(photo => photo.filename);
 

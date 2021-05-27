@@ -5,6 +5,7 @@ import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 import IUsersRepositoryDTO from '../../dtos/IUsersRepositoryDTO';
 import User from '../../infra/database/typeorm/entities/User';
 import IUsersRepository from '../../repositories/IUsersRepository';
@@ -25,6 +26,9 @@ export default class CreateUsersService {
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ adminId, data }: IRequest): Promise<User> {
@@ -62,6 +66,8 @@ export default class CreateUsersService {
       ...data,
       password: hashedPassword,
     });
+
+    await this.cacheProvider.delete('users-list');
 
     const mailTemplate = path.resolve(
       __dirname,

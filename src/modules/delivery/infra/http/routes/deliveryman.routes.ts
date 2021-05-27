@@ -31,7 +31,7 @@ deliveryManRoutes.get(
 );
 
 deliveryManRoutes.patch(
-  '/deliveries/:deliveryManId/finish',
+  '/deliveries/:deliveryId/finish',
   celebrate({
     [Segments.PARAMS]: { deliveryId: Joi.string().uuid().required() },
   }),

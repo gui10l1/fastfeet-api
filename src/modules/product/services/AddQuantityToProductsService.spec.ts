@@ -1,15 +1,19 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeProductsRepository from '../repositories/fakes/FakeProductsRepository';
 import AddQuantityToProductsService from './AddQuantityToProductsService';
 
 let fakeProductsRepository: FakeProductsRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let addQuantityToProductsService: AddQuantityToProductsService;
 
 describe('AddQuantityToProducts', () => {
   beforeEach(() => {
     fakeProductsRepository = new FakeProductsRepository();
+    fakeCacheProvider = new FakeCacheProvider();
     addQuantityToProductsService = new AddQuantityToProductsService(
       fakeProductsRepository,
+      fakeCacheProvider,
     );
   });
 

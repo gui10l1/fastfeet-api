@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeHashProvider from '@shared/providers/HashProvider/fakes/FakeHashProvider';
 import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
 import FakeUsersRepository from '../../repositories/fakes/FakeUsersRepository';
@@ -6,6 +7,7 @@ import UpdateUsersService from './UpdateUsersService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
+let fakeCacheProvider: FakeCacheProvider;
 let updateUsersService: UpdateUsersService;
 let fakeMailProvider: FakeMailProvider;
 
@@ -14,10 +16,12 @@ describe('UpdateUsers', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
     fakeMailProvider = new FakeMailProvider();
+    fakeCacheProvider = new FakeCacheProvider();
     updateUsersService = new UpdateUsersService(
       fakeUsersRepository,
       fakeHashProvider,
       fakeMailProvider,
+      fakeCacheProvider,
     );
   });
 

@@ -18,6 +18,14 @@ const { ensurePermissions, ensureAuthentication } = new Middlewares();
 
 productRoutes.use(ensureAuthentication);
 
+// GET
+productRoutes.get('/', ensurePermissions, productsController.index);
+productRoutes.get(
+  '/:productId',
+  celebrate({ [Segments.PARAMS]: { productId: Joi.string().uuid() } }),
+  productsController.find,
+);
+
 // POST
 productRoutes.post(
   '/',
@@ -106,6 +114,14 @@ productRoutes.patch(
     },
   }),
   productQuantitiesController.update,
+);
+
+// DELETE
+productRoutes.delete(
+  '/:productId',
+  ensurePermissions,
+  celebrate({ [Segments.PARAMS]: { productId: Joi.string().uuid() } }),
+  productsController.delete,
 );
 
 export default productRoutes;

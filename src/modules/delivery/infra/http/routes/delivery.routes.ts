@@ -23,6 +23,7 @@ deliveryRoutes.post(
       neighborhood: Joi.string().required(),
       city: Joi.string().required(),
       state: Joi.string().required(),
+      productQuantity: Joi.number().required(),
     },
   }),
   deliveriesController.create,

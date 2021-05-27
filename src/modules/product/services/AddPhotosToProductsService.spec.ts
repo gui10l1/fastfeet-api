@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeStorageProvider from '@shared/providers/StorageProvider/fakes/FakeStorageProvider';
 
 import FakeProductsRepository from '../repositories/fakes/FakeProductsRepository';
@@ -6,15 +7,18 @@ import AddPhotosToProductsService from './AddPhotosToProductsService';
 
 let fakeProductsRepository: FakeProductsRepository;
 let fakeStorageProvider: FakeStorageProvider;
+let fakeCacheProvider: FakeCacheProvider;
 let addPhotosToProductsService: AddPhotosToProductsService;
 
 describe('AddPhotosToProducts', () => {
   beforeEach(() => {
     fakeProductsRepository = new FakeProductsRepository();
     fakeStorageProvider = new FakeStorageProvider();
+    fakeCacheProvider = new FakeCacheProvider();
     addPhotosToProductsService = new AddPhotosToProductsService(
       fakeProductsRepository,
       fakeStorageProvider,
+      fakeCacheProvider,
     );
   });
 

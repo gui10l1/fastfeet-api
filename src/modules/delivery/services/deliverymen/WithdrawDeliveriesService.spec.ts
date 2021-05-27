@@ -1,19 +1,23 @@
 import FakeDeliveriesRepository from '@modules/delivery/repositories/fakes/FakeDeliveriesRepository';
 import FakeUsersRepository from '@modules/user/repositories/fakes/FakeUsersRepository';
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import WithdrawDeliveriesService from './WithdrawDeliveriesService';
 
 let fakeDeliveriesRepository: FakeDeliveriesRepository;
 let fakeUsersRepository: FakeUsersRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let withdrawDeliveriesService: WithdrawDeliveriesService;
 
 describe('WithdrawDeliveries', () => {
   beforeEach(() => {
     fakeDeliveriesRepository = new FakeDeliveriesRepository();
     fakeUsersRepository = new FakeUsersRepository();
+    fakeCacheProvider = new FakeCacheProvider();
     withdrawDeliveriesService = new WithdrawDeliveriesService(
       fakeDeliveriesRepository,
       fakeUsersRepository,
+      fakeCacheProvider,
     );
   });
 

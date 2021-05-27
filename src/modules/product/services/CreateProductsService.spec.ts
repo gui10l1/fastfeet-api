@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeStorageProvider from '@shared/providers/StorageProvider/fakes/FakeStorageProvider';
 import IProductsRepositoryDTO from '../dtos/IProductsRepositoryDTO';
 import FakeProductsRepository from '../repositories/fakes/FakeProductsRepository';
@@ -7,6 +8,7 @@ import CreateProductsService from './CreateProductsService';
 let createProductData: IProductsRepositoryDTO;
 let fakeProductsRepository: FakeProductsRepository;
 let fakeStorageProvider: FakeStorageProvider;
+let fakeCacheProvider: FakeCacheProvider;
 let createProductsService: CreateProductsService;
 
 describe('CreateProducts', () => {
@@ -20,9 +22,11 @@ describe('CreateProducts', () => {
     };
     fakeStorageProvider = new FakeStorageProvider();
     fakeProductsRepository = new FakeProductsRepository();
+    fakeCacheProvider = new FakeCacheProvider();
     createProductsService = new CreateProductsService(
       fakeProductsRepository,
       fakeStorageProvider,
+      fakeCacheProvider,
     );
   });
 

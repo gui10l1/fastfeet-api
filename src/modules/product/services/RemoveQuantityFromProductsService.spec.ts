@@ -1,15 +1,19 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeProductsRepository from '../repositories/fakes/FakeProductsRepository';
 import RemoveQuantityFromProductsService from './RemoveQuantityFromProductsService';
 
 let fakeProductsRepository: FakeProductsRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let removeQuantityFromProductsService: RemoveQuantityFromProductsService;
 
 describe('RemoveQuantityFormProducts', () => {
   beforeEach(() => {
     fakeProductsRepository = new FakeProductsRepository();
+    fakeCacheProvider = new FakeCacheProvider();
     removeQuantityFromProductsService = new RemoveQuantityFromProductsService(
       fakeProductsRepository,
+      fakeCacheProvider,
     );
   });
 

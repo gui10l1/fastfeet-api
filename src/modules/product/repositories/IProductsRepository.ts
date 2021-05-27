@@ -12,4 +12,6 @@ export default interface IProductsRepository {
   ): Promise<Product>;
   addPhotos(product: Product, photos: string[]): Promise<Product>;
   deletePhotos(product: Product, photos: string[]): Promise<Product>;
+  list(): Promise<Product[]>;
+  delete(product: Product): Promise<void>;
 }

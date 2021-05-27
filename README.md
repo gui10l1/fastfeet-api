@@ -366,3 +366,18 @@ There are some information you should know:
 2. You can't finish a delivery that does not exist;
 3. You can't finish a delivery that does not have a recipient;
 4. You can't finish a delivery that has already been finished.
+
+## Products
+
+This section will help you to deal with products endpoints.
+
+### Creating a new product (POST)
+
+Endpoint: `/products`.
+
+To create a new product you need to be a admin user and provide all information
+for it.
+
+Request property | Description | Required
+---------------- | ----------- | --------
+`name` | This sets the product's name

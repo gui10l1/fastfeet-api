@@ -5,6 +5,7 @@ import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRep
 import IClientsRepository from '@modules/client/repositories/IClientsRepository';
 import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 interface IRequest {
   deliveryId: string;
@@ -22,6 +23,9 @@ export default class CancelDeliveriesService {
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ deliveryId, clientId }: IRequest): Promise<void> {
@@ -46,6 +50,10 @@ export default class CancelDeliveriesService {
     await this.deliveriesRepository.cancelDelivery(
       findDelivery,
       new Date(dateNow),
+    );
+
+    await this.cacheProvider.delete(
+      `delivery-man:${findDelivery.deliveryman_id}:deliveries`,
     );
 
     const templateFile = path.resolve(

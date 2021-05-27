@@ -17,4 +17,14 @@ sessionRoutes.post(
   sessionsController.create,
 );
 
+sessionRoutes.post(
+  '/verify/user',
+  celebrate({
+    [Segments.BODY]: {
+      token: Joi.string().required(),
+    },
+  }),
+  sessionsController.index,
+);
+
 export default sessionRoutes;

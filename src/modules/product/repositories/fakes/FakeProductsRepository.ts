@@ -38,6 +38,18 @@ export default class FakeProductsRepository implements IProductsRepository {
     return product;
   }
 
+  public async list(): Promise<Product[]> {
+    return this.products;
+  }
+
+  public async delete(product: Product): Promise<void> {
+    const findProductIndex = this.products.findIndex(
+      item => item.id === product.id,
+    );
+
+    this.products.splice(findProductIndex, 1);
+  }
+
   public async addQuantityInStock(
     product: Product,
     quantity: number,

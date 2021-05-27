@@ -3,8 +3,9 @@ import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
-
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
+
 import IUsersRepositoryDTO from '../../dtos/IUsersRepositoryDTO';
 import User from '../../infra/database/typeorm/entities/User';
 import IUsersRepository from '../../repositories/IUsersRepository';
@@ -30,6 +31,9 @@ export default class UpdateUsersService {
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -124,10 +128,14 @@ export default class UpdateUsersService {
         parsedData,
       );
 
+      await this.cacheProvider.delete('users-list');
+
       return userUpdated;
     }
 
     const userUpdated = await this.usersRepository.update(userToUpdate, data);
+
+    await this.cacheProvider.delete('users-list');
 
     return userUpdated;
   }

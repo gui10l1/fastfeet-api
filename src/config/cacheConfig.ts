@@ -8,12 +8,12 @@ interface ICacheConfig {
 }
 
 export default {
-  type: 'redis',
+  type: process.env.CACHE_PROVIDER,
   config: {
     redis: {
-      host: '127.0.0.1',
-      port: 6379,
-      password: '',
+      host: process.env.CACHE_PROVIDER_HOST,
+      port: process.env.CACHE_PROVIDER_PORT,
+      password: process.env.CACHE_PROVIDER_PASSWORD,
     },
   },
 } as ICacheConfig;
