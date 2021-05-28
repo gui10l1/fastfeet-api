@@ -43,7 +43,9 @@ export default class ProductsController {
       photos: filenames,
     });
 
-    return res.status(201).json(product);
+    const response = classToClass(product);
+
+    return res.status(201).json(response);
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
@@ -57,7 +59,9 @@ export default class ProductsController {
       productId,
     });
 
-    return res.json(product);
+    const response = classToClass(product);
+
+    return res.json(response);
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {

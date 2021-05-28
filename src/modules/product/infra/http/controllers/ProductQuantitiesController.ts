@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import AddQuantityToProductsService from '@modules/product/services/AddQuantityToProductsService';
 import RemoveQuantityFromProductsService from '@modules/product/services/RemoveQuantityFromProductsService';
+import { classToClass } from 'class-transformer';
 
 export default class ProductQuantitiesController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -16,7 +17,9 @@ export default class ProductQuantitiesController {
       productId,
     });
 
-    return res.status(201).json(product);
+    const response = classToClass(product);
+
+    return res.status(201).json(response);
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
@@ -30,6 +33,8 @@ export default class ProductQuantitiesController {
       productId,
     });
 
-    return res.json(product);
+    const response = classToClass(product);
+
+    return res.json(response);
   }
 }

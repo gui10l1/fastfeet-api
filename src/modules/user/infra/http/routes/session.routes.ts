@@ -18,7 +18,7 @@ sessionRoutes.post(
 );
 
 sessionRoutes.post(
-  '/verify/user',
+  '/verify',
   celebrate({
     [Segments.BODY]: {
       token: Joi.string().required(),

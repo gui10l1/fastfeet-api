@@ -23,7 +23,10 @@ export default {
       storage: multer.diskStorage({
         destination: path.resolve(tmpDirectory),
         filename: (_, file, cb) => {
-          const fileName = `${Date.now()}-${file.originalname}`;
+          const fileName = `${Date.now()}-${file.originalname.replace(
+            ' ',
+            '_',
+          )}`;
 
           return cb(null, fileName);
         },

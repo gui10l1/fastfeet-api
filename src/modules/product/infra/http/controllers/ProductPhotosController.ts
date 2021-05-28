@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import AddPhotosToProductsService from '@modules/product/services/AddPhotosToProductsService';
 import RemovePhotosFromProductsService from '@modules/product/services/RemovePhotosFromProductsService';
 import AppError from '@shared/errors/AppError';
+import { classToClass } from 'class-transformer';
 
 export default class ProductPhotosController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -23,7 +24,9 @@ export default class ProductPhotosController {
       productId,
     });
 
-    return res.status(201).json(product);
+    const response = classToClass(product);
+
+    return res.status(201).json(response);
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
@@ -37,6 +40,8 @@ export default class ProductPhotosController {
       productId,
     });
 
-    return res.json(product);
+    const response = classToClass(product);
+
+    return res.json(response);
   }
 }
