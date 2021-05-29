@@ -4,6 +4,7 @@ import path from 'path';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 import Client from '../../infra/database/typeorm/entities/Client';
 import IClientsRepository from '../../repositories/IClientsRepository';
@@ -20,6 +21,9 @@ export default class CreateClientsService {
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -27,6 +31,8 @@ export default class CreateClientsService {
     password,
     ...rest
   }: IClientsRepositoryDTO): Promise<Client> {
+    const cacheKey = `clients-list`;
+
     const findClientByEmail = await this.clientsRepository.findByEmail(email);
 
     if (findClientByEmail) {
@@ -63,6 +69,8 @@ export default class CreateClientsService {
         },
       },
     });
+
+    await this.cacheProvider.delete(cacheKey);
 
     return client;
   }

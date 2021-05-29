@@ -48,4 +48,8 @@ export default class ClientsRepository implements IClientsRepository {
 
     return updatedClient;
   }
+
+  public async list(): Promise<Client[]> {
+    return this.ormRepository.find();
+  }
 }

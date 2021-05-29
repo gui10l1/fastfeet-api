@@ -6,4 +6,5 @@ export default interface IClientsRepository {
   findByEmail(email: string): Promise<Client | undefined>;
   findById(id: string): Promise<Client | undefined>;
   update(client: Client, data: Partial<IClientsRepositoryDTO>): Promise<Client>;
+  list(): Promise<Client[]>;
 }

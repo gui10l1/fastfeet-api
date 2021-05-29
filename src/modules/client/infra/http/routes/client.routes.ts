@@ -7,10 +7,23 @@ import ClientsController from '../controllers/ClientsController';
 
 const clientRoutes = Router();
 const clientsController = new ClientsController();
-const { ensureAuthentication } = new Middlewares();
+const { ensureAuthentication, ensurePermissions } = new Middlewares();
 
 // GET
-clientRoutes.get('/', ensureAuthentication, clientsController.find);
+clientRoutes.get(
+  '/',
+  ensureAuthentication,
+  ensurePermissions,
+  clientsController.index,
+);
+clientRoutes.get(
+  '/:clientId',
+  ensureAuthentication,
+  celebrate({
+    [Segments.PARAMS]: { clientId: Joi.string().uuid().required() },
+  }),
+  clientsController.find,
+);
 
 // POST
 clientRoutes.post(

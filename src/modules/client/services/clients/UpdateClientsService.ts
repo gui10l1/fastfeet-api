@@ -4,6 +4,7 @@ import path from 'path';
 import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 import IClientsRepository from '../../repositories/IClientsRepository';
 import IClientsRepositoryDTO from '../../dtos/IClientsRepositoryDTO';
@@ -29,9 +30,14 @@ export default class UpdateClientsService {
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ clientLogged, data }: IRequest): Promise<Client> {
+    const cacheKey = `clients-list`;
+
     const findClientToBeUpdated = await this.clientsRepository.findById(
       clientLogged,
     );
@@ -106,6 +112,8 @@ export default class UpdateClientsService {
       findClientToBeUpdated,
       data,
     );
+
+    await this.cacheProvider.delete(cacheKey);
 
     return clientUpdated;
   }

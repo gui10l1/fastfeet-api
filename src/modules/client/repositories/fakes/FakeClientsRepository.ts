@@ -47,4 +47,8 @@ export default class FakeClientsRepository implements IClientsRepository {
 
     return updatedClient;
   }
+
+  public async list(): Promise<Client[]> {
+    return this.clients;
+  }
 }
