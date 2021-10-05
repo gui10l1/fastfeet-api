@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { celebrate, Segments, Joi } from 'celebrate';
+import { Router } from 'express';
 
 import SessionsController from '../controllers/SessionsController';
 

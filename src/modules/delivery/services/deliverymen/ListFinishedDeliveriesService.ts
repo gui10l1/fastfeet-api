@@ -3,11 +3,13 @@ import { inject, injectable } from 'tsyringe';
 import Delivery from '@modules/delivery/infra/database/typeorm/entities/Delivery';
 import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
 import IUsersRepository from '@modules/user/repositories/IUsersRepository';
+
 import AppError from '@shared/errors/AppError';
 import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
 
 interface IRequest {
   deliveryManId: string;
+  relations?: string[];
 }
 
 @injectable()
@@ -23,7 +25,16 @@ export default class ListFinishedDeliveriesService {
     private cacheProvider: ICacheProvider,
   ) {}
 
-  public async execute({ deliveryManId }: IRequest): Promise<Delivery[]> {
+  public async execute({
+    deliveryManId,
+    relations,
+  }: IRequest): Promise<Delivery[]> {
+    const cacheKey = `delivery-man:${deliveryManId}:finished-deliveries`;
+
+    if (relations) {
+      await this.cacheProvider.delete(cacheKey);
+    }
+
     const findDeliveryMan = await this.usersRepository.findById(deliveryManId);
 
     if (!findDeliveryMan) {
@@ -34,12 +45,12 @@ export default class ListFinishedDeliveriesService {
       throw new AppError('Invalid user');
     }
 
-    const cacheKey = `delivery-man:${deliveryManId}:finished-deliveries`;
     const cachedDeliveries = await this.cacheProvider.get<Delivery[]>(cacheKey);
 
     if (!cachedDeliveries) {
       const finishedDeliveries = await this.deliveriesRepository.getDeliveryManFinishedDeliveries(
         deliveryManId,
+        relations,
       );
 
       await this.cacheProvider.save(

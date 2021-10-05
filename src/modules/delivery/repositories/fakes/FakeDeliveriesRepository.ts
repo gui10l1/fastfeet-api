@@ -116,4 +116,8 @@ export default class FakeDeliveriesRepository implements IDeliveriesRepository {
 
     this.deliveries[findDeliveryIndex] = delivery;
   }
+
+  public async list(): Promise<Delivery[]> {
+    return this.deliveries.filter(delivery => !delivery.deliveryman_id);
+  }
 }

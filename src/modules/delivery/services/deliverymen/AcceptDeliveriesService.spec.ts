@@ -1,12 +1,16 @@
 import FakeDeliveriesRepository from '@modules/delivery/repositories/fakes/FakeDeliveriesRepository';
 import FakeUsersRepository from '@modules/user/repositories/fakes/FakeUsersRepository';
+
 import AppError from '@shared/errors/AppError';
 import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
+import FakeSocketProvider from '@shared/providers/SocketProvider/fakes/FakeSocketProvider';
+
 import AcceptDeliveriesService from './AcceptDeliveriesService';
 
 let fakeDeliveriesRepository: FakeDeliveriesRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeCacheProvider: FakeCacheProvider;
+let fakeSocketProvider: FakeSocketProvider;
 let acceptDeliveriesService: AcceptDeliveriesService;
 
 describe('AcceptDeliveries', () => {
@@ -14,10 +18,12 @@ describe('AcceptDeliveries', () => {
     fakeDeliveriesRepository = new FakeDeliveriesRepository();
     fakeUsersRepository = new FakeUsersRepository();
     fakeCacheProvider = new FakeCacheProvider();
+    fakeSocketProvider = new FakeSocketProvider();
     acceptDeliveriesService = new AcceptDeliveriesService(
       fakeDeliveriesRepository,
       fakeUsersRepository,
       fakeCacheProvider,
+      fakeSocketProvider,
     );
   });
 

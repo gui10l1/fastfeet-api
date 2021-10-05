@@ -1,11 +1,12 @@
-import { inject, injectable } from 'tsyringe';
 import path from 'path';
+import { inject, injectable } from 'tsyringe';
 
-import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
 import IClientsRepository from '@modules/client/repositories/IClientsRepository';
+import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
+
 import AppError from '@shared/errors/AppError';
-import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
+import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 
 interface IRequest {
   deliveryId: string;

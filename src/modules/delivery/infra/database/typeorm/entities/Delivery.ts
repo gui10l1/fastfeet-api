@@ -1,4 +1,3 @@
-import Product from '@modules/product/infra/database/typeorm/entities/Product';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import Product from '@modules/product/infra/database/typeorm/entities/Product';
 
 @Entity('deliveries')
 export default class Delivery {

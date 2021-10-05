@@ -1,11 +1,13 @@
-import { inject, injectable } from 'tsyringe';
 import { sign } from 'jsonwebtoken';
+import { inject, injectable } from 'tsyringe';
 
-import IUsersRepository from '@modules/user/repositories/IUsersRepository';
-import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
-import User from '@modules/user/infra/database/typeorm/entities/User';
-import AppError from '@shared/errors/AppError';
 import authConfig from '@config/authConfig';
+
+import User from '@modules/user/infra/database/typeorm/entities/User';
+import IUsersRepository from '@modules/user/repositories/IUsersRepository';
+
+import AppError from '@shared/errors/AppError';
+import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 
 interface IRequest {
   cpf: string;

@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import { Router } from 'express';
 
 import Middlewares from '@shared/infra/http/middlewares/Middlewares';
 
@@ -12,6 +12,8 @@ const cancelDeliveriesController = new CancelDeliveriesController();
 const { ensureAuthentication } = new Middlewares();
 
 deliveryRoutes.use(ensureAuthentication);
+
+deliveryRoutes.get('/', deliveriesController.index);
 
 deliveryRoutes.post(
   '/',

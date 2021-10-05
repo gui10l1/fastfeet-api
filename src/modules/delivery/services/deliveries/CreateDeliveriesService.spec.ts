@@ -1,7 +1,10 @@
 import FakeClientsRepository from '@modules/client/repositories/fakes/FakeClientsRepository';
 import FakeProductsRepository from '@modules/product/repositories/fakes/FakeProductsRepository';
+
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
+import FakeSocketProvider from '@shared/providers/SocketProvider/fakes/FakeSocketProvider';
 
 import IDeliveriesRepositoryDTO from '../../dtos/IDeliveriesRepositoryDTO';
 import FakeDeliveriesRepository from '../../repositories/fakes/FakeDeliveriesRepository';
@@ -13,6 +16,8 @@ let fakeProductsRepository: FakeProductsRepository;
 let fakeClientsRepository: FakeClientsRepository;
 let fakeMailProvider: FakeMailProvider;
 let createDeliveriesService: CreateDeliveriesService;
+let fakeCacheProvider: FakeCacheProvider;
+let fakeSocketProvider: FakeSocketProvider;
 
 describe('CreateDeliveries', () => {
   beforeEach(() => {
@@ -30,11 +35,15 @@ describe('CreateDeliveries', () => {
     fakeClientsRepository = new FakeClientsRepository();
     fakeProductsRepository = new FakeProductsRepository();
     fakeMailProvider = new FakeMailProvider();
+    fakeCacheProvider = new FakeCacheProvider();
+    fakeSocketProvider = new FakeSocketProvider();
     createDeliveriesService = new CreateDeliveriesService(
       fakeDeliveriesRepository,
       fakeClientsRepository,
       fakeProductsRepository,
       fakeMailProvider,
+      fakeCacheProvider,
+      fakeSocketProvider,
     );
   });
 

@@ -2,8 +2,10 @@ import { inject, injectable } from 'tsyringe';
 
 import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
 import IUsersRepository from '@modules/user/repositories/IUsersRepository';
+
 import AppError from '@shared/errors/AppError';
 import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
+import ISocketProvider from '@shared/providers/SocketProvider/models/ISocketProvider';
 
 interface IRequest {
   deliveryId: string;
@@ -21,6 +23,9 @@ export default class AcceptDeliveriesService {
 
     @inject('CacheProvider')
     private cacheProvider: ICacheProvider,
+
+    @inject('SocketProvider')
+    private socketProvider: ISocketProvider,
   ) {}
 
   public async execute({ deliveryId, deliveryManId }: IRequest): Promise<void> {
@@ -49,6 +54,11 @@ export default class AcceptDeliveriesService {
     const cacheKey = `delivery-man:${deliveryManId}:deliveries`;
 
     await this.cacheProvider.delete(cacheKey);
+    await this.cacheProvider.delete('deliveries:requests:list');
+
+    const deliveries = await this.deliveriesRepository.list();
+
+    this.socketProvider.emit('getDeliveries', deliveries);
 
     return this.deliveriesRepository.acceptDelivery(
       findDelivery,

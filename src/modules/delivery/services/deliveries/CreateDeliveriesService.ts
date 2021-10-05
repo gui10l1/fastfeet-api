@@ -1,10 +1,13 @@
-import { inject, injectable } from 'tsyringe';
 import path from 'path';
+import { inject, injectable } from 'tsyringe';
 
 import IClientsRepository from '@modules/client/repositories/IClientsRepository';
-import AppError from '@shared/errors/AppError';
-import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
 import IProductsRepository from '@modules/product/repositories/IProductsRepository';
+
+import AppError from '@shared/errors/AppError';
+import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
+import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
+import ISocketProvider from '@shared/providers/SocketProvider/models/ISocketProvider';
 
 import IDeliveriesRepositoryDTO from '../../dtos/IDeliveriesRepositoryDTO';
 import Delivery from '../../infra/database/typeorm/entities/Delivery';
@@ -24,10 +27,17 @@ export default class CreateDeliveriesService {
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
+
+    @inject('SocketProvider')
+    private socketProvider: ISocketProvider,
   ) {}
 
   public async execute(data: IDeliveriesRepositoryDTO): Promise<Delivery> {
     const findClient = await this.clientsRepository.findById(data.recipientId);
+    const cacheKey = `deliveries-list`;
 
     if (!findClient) {
       throw new AppError('Client not found', 404);
@@ -49,6 +59,8 @@ export default class CreateDeliveriesService {
     }
 
     const delivery = await this.deliveriesRepository.create(data);
+
+    await this.cacheProvider.delete(cacheKey);
 
     await this.productsRepository.removeQuantityFromStock(
       findProduct,
@@ -83,6 +95,10 @@ export default class CreateDeliveriesService {
         },
       },
     });
+
+    const deliveries = await this.deliveriesRepository.list();
+
+    this.socketProvider.emit('getDeliveries', deliveries);
 
     return delivery;
   }

@@ -1,7 +1,9 @@
-import FinishDeliveriesService from '@modules/delivery/services/deliverymen/FinishDeliveriesService';
-import AppError from '@shared/errors/AppError';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+
+import FinishDeliveriesService from '@modules/delivery/services/deliverymen/FinishDeliveriesService';
+
+import AppError from '@shared/errors/AppError';
 
 export default class FinishDeliveriesController {
   public async index(req: Request, res: Response): Promise<Response> {

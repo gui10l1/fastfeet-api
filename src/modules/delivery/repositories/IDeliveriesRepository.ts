@@ -11,7 +11,14 @@ export default interface IDeliveriesRepository {
     signatureId: string,
   ): Promise<Delivery>;
   findById(deliveryId: string): Promise<Delivery | undefined>;
-  getDeliveryManDeliveries(deliveryManId: string): Promise<Delivery[]>;
-  getDeliveryManFinishedDeliveries(deliveryManId: string): Promise<Delivery[]>;
+  getDeliveryManDeliveries(
+    deliveryManId: string,
+    relations?: string[],
+  ): Promise<Delivery[]>;
+  getDeliveryManFinishedDeliveries(
+    deliveryManId: string,
+    relations?: string[],
+  ): Promise<Delivery[]>;
   acceptDelivery(delivery: Delivery, deliveryManId: string): Promise<void>;
+  list(): Promise<Delivery[]>;
 }

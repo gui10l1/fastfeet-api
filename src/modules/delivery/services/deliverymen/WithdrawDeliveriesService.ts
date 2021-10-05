@@ -45,12 +45,12 @@ export default class WithdrawDeliveriesService {
 
     const hoursNow = getHours(dateFromToday);
 
-    if (hoursNow < 8 || hoursNow > 12) {
-      throw new AppError(
-        'You are not allowed to withdraw deliveries before 8am and after 12pm',
-        403,
-      );
-    }
+    // if (hoursNow < 8 || hoursNow > 12) {
+    //   throw new AppError(
+    //     'You are not allowed to withdraw deliveries before 8am and after 12pm',
+    //     403,
+    //   );
+    // }
 
     await this.deliveriesRepository.withdrawDelivery(
       findDelivery,

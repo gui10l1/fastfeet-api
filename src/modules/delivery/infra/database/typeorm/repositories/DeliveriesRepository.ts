@@ -1,6 +1,8 @@
+import { getRepository, IsNull, Not, Repository } from 'typeorm';
+
 import IDeliveriesRepositoryDTO from '@modules/delivery/dtos/IDeliveriesRepositoryDTO';
 import IDeliveriesRepository from '@modules/delivery/repositories/IDeliveriesRepository';
-import { getRepository, IsNull, Not, Repository } from 'typeorm';
+
 import Delivery from '../entities/Delivery';
 
 export default class DeliveriesRepository implements IDeliveriesRepository {
@@ -73,6 +75,7 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
 
   public async getDeliveryManDeliveries(
     deliveryManId: string,
+    relations?: string[],
   ): Promise<Delivery[]> {
     return this.ormRepository.find({
       where: {
@@ -80,17 +83,20 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
         end_date: null,
         canceled_at: null,
       },
+      relations: relations || [],
     });
   }
 
   public async getDeliveryManFinishedDeliveries(
     deliveryManId: string,
+    relations?: string[],
   ): Promise<Delivery[]> {
     return this.ormRepository.find({
       where: {
         deliveryman_id: deliveryManId,
         end_date: Not(IsNull()),
       },
+      relations: relations || [],
     });
   }
 
@@ -103,5 +109,11 @@ export default class DeliveriesRepository implements IDeliveriesRepository {
     });
 
     await this.ormRepository.save(acceptedDelivery);
+  }
+
+  public async list(): Promise<Delivery[]> {
+    return this.ormRepository.find({
+      where: { deliveryman_id: IsNull() },
+    });
   }
 }

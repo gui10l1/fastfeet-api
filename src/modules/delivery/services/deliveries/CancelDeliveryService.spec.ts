@@ -1,8 +1,10 @@
 import FakeClientsRepository from '@modules/client/repositories/fakes/FakeClientsRepository';
 import FakeDeliveriesRepository from '@modules/delivery/repositories/fakes/FakeDeliveriesRepository';
+
 import AppError from '@shared/errors/AppError';
 import FakeCacheProvider from '@shared/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeMailProvider from '@shared/providers/MailProvider/fakes/FakeMailProvider';
+
 import CancelDeliveriesService from './CancelDeliveryService';
 
 let fakeDeliveriesRepository: FakeDeliveriesRepository;

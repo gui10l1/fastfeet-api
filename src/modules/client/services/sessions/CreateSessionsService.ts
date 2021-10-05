@@ -1,12 +1,13 @@
-import { inject, injectable } from 'tsyringe';
 import { sign } from 'jsonwebtoken';
+import { inject, injectable } from 'tsyringe';
 
-import IClientsRepository from '@modules/client/repositories/IClientsRepository';
-import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
+import authConfig from '@config/authConfig';
+
 import Client from '@modules/client/infra/database/typeorm/entities/Client';
+import IClientsRepository from '@modules/client/repositories/IClientsRepository';
 
 import AppError from '@shared/errors/AppError';
-import authConfig from '@config/authConfig';
+import IHashProvider from '@shared/providers/HashProvider/models/IHashProvider';
 
 interface IRequest {
   email: string;
